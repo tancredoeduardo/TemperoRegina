@@ -1,0 +1,324 @@
+import { useParams, Link } from "react-router-dom";
+import { Calendar, MapPin, Clock, ChevronLeft, CheckCircle, Star, Ticket } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import Navbar from "@/components/feature/Navbar";
+import Footer from "@/components/feature/Footer";
+import { getEventById, eventsData } from "@/mocks/events";
+import NotFound from "@/pages/NotFound";
+
+function formatDate(dateStr: string) {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
+}
+
+function isUpcoming(dateStr: string) {
+  return new Date(dateStr) >= new Date();
+}
+
+export default function EventDetail() {
+  const { id } = useParams<{ id: string }>;
+  const event = getEventById(Number(id));
+  const heroRef = useRef<HTMLDivElement>(null);
+  const [heroVisible, setHeroVisible] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [formData, setFormData] = useState({ nome: "", email: "", telefone: "", observacao: "" });
+
+  useEffect(() => {
+    setHeroVisible(true);
+    window.scrollTo(0, 0);
+  }, [id]);
+
+  if (!event) {
+    return <NotFound />;
+  }
+
+  const relatedEvents = eventsData
+    .filter((e) => e.id !== event.id && e.category === event.category)
+    .slice(0, 3);
+
+  const otherEvents = relatedEvents.length > 0
+    ? relatedEvents
+    : eventsData.filter((e) => e.id !== event.id).slice(0, 3);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitted(true);
+    setFormData({ nome: "", email: "", telefone: "", observacao: "" });
+    setTimeout(() => setSubmitted(false), 5000);
+  };
+
+  return (
+    <div className="min-h-screen bg-regina-gray-warm flex flex-col">
+      <Navbar />
+
+      {/* Breadcrumb */}
+      <div className="bg-white border-b border-gray-100" style={{ marginTop: "80px" }}>
+        <div className="max-w-6xl mx-auto px-4 md:px-6 py-3">
+          <div className="flex items-center gap-2 text-xs md:text-sm text-gray-500">
+            <Link to="/" className="hover:text-regina-red transition-colors">Home</Link>
+            <ChevronLeft className="w-3 h-3 rotate-180" />
+            <Link to="/eventos" className="hover:text-regina-red transition-colors">Eventos</Link>
+            <ChevronLeft className="w-3 h-3 rotate-180" />
+            <span className="text-gray-900 font-medium truncate">{event.title}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Hero */}
+      <div
+        ref={heroRef}
+        className="relative w-full h-[280px] md:h-[420px] overflow-hidden"
+      >
+        <img
+          src={event.image}
+          alt={event.title}
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/20" />
+        <div className="absolute bottom-0 left-0 right-0 p-4 md:p-8">
+          <div className="max-w-6xl mx-auto">
+            <span className="inline-block bg-regina-yellow text-regina-dark text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-3">
+              {event.category}
+            </span>
+            <h1
+              className={`text-2xl md:text-4xl lg:text-5xl font-bold text-white uppercase tracking-wide mb-3 drop-shadow-lg transition-all duration-700 ${
+                heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+              }`}
+            >
+              {event.title}
+            </h1>
+            <div className="flex flex-wrap items-center gap-4 md:gap-6 text-white/90 text-sm">
+              <div className="flex items-center gap-1.5">
+                <Calendar className="w-4 h-4 text-regina-yellow" />
+                <span>{formatDate(event.date)}</span>
+              </div>
+              {event.time && (
+                <div className="flex items-center gap-1.5">
+                  <Clock className="w-4 h-4 text-regina-yellow" />
+                  <span>{event.time}</span>
+                </div>
+              )}
+              <div className="flex items-center gap-1.5">
+                <MapPin className="w-4 h-4 text-regina-yellow" />
+                <span>{event.location}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <section className="flex-1 py-8 md:py-14">
+        <div className="max-w-6xl mx-auto px-4 md:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-10">
+            {/* Left Column - Info */}
+            <div className="lg:col-span-2 space-y-8">
+              {/* Description */}
+              <div className="bg-white rounded-xl p-5 md:p-7 border border-gray-100">
+                <h2 className="text-lg md:text-xl font-bold text-gray-900 uppercase tracking-wide mb-4">
+                  Sobre o Evento
+                </h2>
+                <p className="text-sm md:text-base text-gray-700 leading-relaxed mb-4">
+                  {event.fullDescription || event.description}
+                </p>
+                {event.address && (
+                  <div className="flex items-start gap-2 text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
+                    <MapPin className="w-4 h-4 text-regina-red shrink-0 mt-0.5" />
+                    <span>{event.address}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Highlights */}
+              {event.highlights && event.highlights.length > 0 && (
+                <div className="bg-white rounded-xl p-5 md:p-7 border border-gray-100">
+                  <h2 className="text-lg md:text-xl font-bold text-gray-900 uppercase tracking-wide mb-4">
+                    Destaques
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {event.highlights.map((highlight, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center gap-3 p-3 rounded-lg bg-regina-gray-warm hover:bg-regina-yellow/10 transition-colors"
+                      >
+                        <div className="w-8 h-8 flex items-center justify-center rounded-full bg-regina-red/10 text-regina-red shrink-0">
+                          <Star className="w-4 h-4" />
+                        </div>
+                        <span className="text-sm font-medium text-gray-800">{highlight}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Schedule */}
+              {event.schedule && event.schedule.length > 0 && (
+                <div className="bg-white rounded-xl p-5 md:p-7 border border-gray-100">
+                  <h2 className="text-lg md:text-xl font-bold text-gray-900 uppercase tracking-wide mb-4">
+                    Programação
+                  </h2>
+                  <div className="space-y-3">
+                    {event.schedule.map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-start gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                      >
+                        <div className="w-16 shrink-0 text-center">
+                          <span className="text-xs font-bold text-regina-red bg-regina-red/10 px-2 py-1 rounded-md">
+                            {item.time}
+                          </span>
+                        </div>
+                        <div>
+                          <p className="text-sm md:text-base text-gray-800 font-medium">{item.activity}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Right Column - Registration */}
+            <div className="lg:col-span-1">
+              <div className="bg-white rounded-xl p-5 md:p-6 border border-gray-100 sticky top-24">
+                <h3 className="text-lg font-bold text-gray-900 uppercase tracking-wide mb-4">
+                  {isUpcoming(event.date) ? "Inscreva-se" : "Evento Encerrado"}
+                </h3>
+
+                {event.price && (
+                  <div className="flex items-center gap-2 mb-4 p-3 bg-regina-gray-warm rounded-lg">
+                    <Ticket className="w-4 h-4 text-regina-red" />
+                    <span className="text-sm font-medium text-gray-800">{event.price}</span>
+                  </div>
+                )}
+
+                {isUpcoming(event.date) ? (
+                  <form
+                    action="https://readdy.ai/api/form/d7qmeinb5ro7pimqgl2g"
+                    method="POST"
+                    data-readdy-form="true"
+                    className="space-y-3"
+                    onSubmit={handleSubmit}
+                  >
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Nome completo</label>
+                      <input
+                        type="text"
+                        name="nome"
+                        value={formData.nome}
+                        onChange={(e) => setFormData((p) => ({ ...p, nome: e.target.value }))}
+                        required
+                        className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:border-regina-red"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">E-mail</label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData((p) => ({ ...p, email: e.target.value }))}
+                        required
+                        className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:border-regina-red"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Telefone</label>
+                      <input
+                        type="tel"
+                        name="telefone"
+                        value={formData.telefone}
+                        onChange={(e) => setFormData((p) => ({ ...p, telefone: e.target.value }))}
+                        className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:border-regina-red"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Observação</label>
+                      <textarea
+                        name="observacao"
+                        value={formData.observacao}
+                        onChange={(e) => setFormData((p) => ({ ...p, observacao: e.target.value }))}
+                        rows={3}
+                        maxLength={500}
+                        className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:border-regina-red resize-none"
+                        placeholder="Alguma restrição alimentar, acompanhante, etc."
+                      />
+                      <p className="text-[10px] text-gray-400 mt-1 text-right">{formData.observacao.length}/500</p>
+                    </div>
+                    <button
+                      type="submit"
+                      className="w-full bg-regina-red text-white text-sm font-bold py-2.5 rounded-md hover:bg-regina-red-dark transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+                    >
+                      CONFIRMAR INSCRIÇÃO
+                    </button>
+                  </form>
+                ) : (
+                  <div className="text-center py-4">
+                    <p className="text-sm text-gray-500 mb-2">Este evento já foi realizado.</p>
+                    <Link
+                      to="/eventos"
+                      className="inline-block text-sm text-regina-red font-medium hover:underline"
+                    >
+                      Ver próximos eventos
+                    </Link>
+                  </div>
+                )}
+
+                {submitted && (
+                  <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600 shrink-0" />
+                    <p className="text-xs text-green-700">
+                      Inscrição enviada com sucesso! Entraremos em contato em breve.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Related Events */}
+      {otherEvents.length > 0 && (
+        <section className="py-10 md:py-14 bg-white border-t border-gray-100">
+          <div className="max-w-6xl mx-auto px-4 md:px-6">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 uppercase tracking-wide mb-6">
+              Outros Eventos
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+              {otherEvents.map((e) => (
+                <Link
+                  key={e.id}
+                  to={`/eventos/${e.id}`}
+                  className="group bg-regina-gray-warm rounded-xl overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                >
+                  <div className="relative h-40 md:h-44 overflow-hidden">
+                    <img
+                      src={e.image}
+                      alt={e.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <span className="absolute top-3 left-3 bg-regina-red text-white text-[10px] md:text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wide">
+                      {e.category}
+                    </span>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="text-sm md:text-base font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-regina-red transition-colors">
+                      {e.title}
+                    </h3>
+                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <Calendar className="w-3 h-3 text-regina-red" />
+                      <span>{formatDate(e.date)}</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      <Footer />
+    </div>
+  );
+}

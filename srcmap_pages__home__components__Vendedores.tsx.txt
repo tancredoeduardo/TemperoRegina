@@ -1,0 +1,372 @@
+import { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { MapPin, Phone, Mail, Building2, Users } from "lucide-react";
+import ScrollReveal from "@/components/base/ScrollReveal";
+import { estadosData, regioes, getTotalVendedores, getEstadoBySigla, getEstadosByRegiao } from "@/mocks/vendedores";
+
+// Mapa do Brasil realista com regiões - coordenadas aproximadas dos estados
+const estadoPositions: Record<string, { cx: number; cy: number; r: number }> = {
+  RO: { cx: 85, cy: 200, r: 12 },
+  AC: { cx: 50, cy: 230, r: 10 },
+  AM: { cx: 110, cy: 160, r: 18 },
+  RR: { cx: 130, cy: 110, r: 10 },
+  PA: { cx: 170, cy: 170, r: 18 },
+  AP: { cx: 190, cy: 100, r: 9 },
+  TO: { cx: 190, cy: 210, r: 11 },
+  MA: { cx: 230, cy: 155, r: 14 },
+  PI: { cx: 235, cy: 195, r: 12 },
+  CE: { cx: 255, cy: 155, r: 11 },
+  RN: { cx: 272, cy: 158, r: 9 },
+  PB: { cx: 265, cy: 172, r: 10 },
+  PE: { cx: 265, cy: 190, r: 11 },
+  AL: { cx: 272, cy: 205, r: 9 },
+  SE: { cx: 262, cy: 220, r: 9 },
+  BA: { cx: 240, cy: 245, r: 16 },
+  MG: { cx: 245, cy: 300, r: 16 },
+  ES: { cx: 268, cy: 305, r: 9 },
+  RJ: { cx: 258, cy: 320, r: 10 },
+  SP: { cx: 230, cy: 335, r: 14 },
+  PR: { cx: 205, cy: 360, r: 12 },
+  SC: { cx: 210, cy: 380, r: 11 },
+  RS: { cx: 200, cy: 410, r: 13 },
+  MS: { cx: 170, cy: 345, r: 12 },
+  MT: { cx: 140, cy: 270, r: 16 },
+  GO: { cx: 200, cy: 290, r: 12 },
+  DF: { cx: 210, cy: 285, r: 7 },
+};
+
+const regiaoColors: Record<string, string> = {
+  Nordeste: "#FFD000",
+  Norte: "#FFD000",
+  "Centro-Oeste": "#FFD000",
+  Sudeste: "#FFD000",
+  Sul: "#FFD000",
+};
+
+export default function Vendedores() {
+  const [selectedSigla, setSelectedSigla] = useState<string | null>(null);
+  const [activeRegiao, setActiveRegiao] = useState<string | null>(null);
+  const [hoveredEstado, setHoveredEstado] = useState<string | null>(null);
+
+  const selectedEstado = useMemo(() => getEstadoBySigla(selectedSigla || ""), [selectedSigla]);
+
+  const filteredEstados = useMemo(() => {
+    if (!activeRegiao) return estadosData;
+    return getEstadosByRegiao(activeRegiao);
+  }, [activeRegiao]);
+
+  const filteredSiglas = new Set(filteredEstados.map((e) => e.sigla));
+
+  const handleEstadoClick = (sigla: string) => {
+    const estado = getEstadoBySigla(sigla);
+    if (!estado || estado.vendedores.length === 0) return;
+    if (selectedSigla === sigla) {
+      setSelectedSigla(null);
+    } else {
+      setSelectedSigla(sigla);
+    }
+  };
+
+  return (
+    <section id="parceiros" className="relative bg-white py-12 md:py-20 overflow-hidden">
+      <div className="max-w-6xl mx-auto px-4 md:px-6">
+        <ScrollReveal>
+          <div className="text-center mb-8 md:mb-12">
+            <div className="inline-flex items-center gap-2 mb-2">
+              <MapPin className="w-4 h-4 text-regina-red" />
+              <span className="text-xs font-semibold text-regina-red uppercase tracking-wider">
+                Presença Nacional
+              </span>
+            </div>
+            <h2 className="text-xl md:text-3xl font-bold text-gray-900 uppercase tracking-wide mb-2">
+              Nossos Vendedores
+            </h2>
+            <p className="text-xs md:text-sm text-gray-500 max-w-lg mx-auto">
+              Com {getTotalVendedores()} representantes em {estadosData.length} estados do Brasil.
+              Clique no estado para conhecer nossos vendedores.
+            </p>
+          </div>
+        </ScrollReveal>
+
+        {/* Filtro por região */}
+        <ScrollReveal delay={0.1}>
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-6 md:mb-8">
+            <button
+              type="button"
+              onClick={() => setActiveRegiao(null)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap ${
+                activeRegiao === null
+                  ? "bg-regina-red text-white shadow-md"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
+            >
+              Todos
+            </button>
+            {regioes.map((r) => (
+              <button
+                key={r}
+                type="button"
+                onClick={() => setActiveRegiao(activeRegiao === r ? null : r)}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap ${
+                  activeRegiao === r
+                    ? "bg-regina-red text-white shadow-md"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+              >
+                {r}
+              </button>
+            ))}
+          </div>
+        </ScrollReveal>
+
+        {/* Mapa SVG do Brasil */}
+        <ScrollReveal delay={0.15}>
+          <div className="relative w-full max-w-2xl mx-auto mb-8 select-none">
+            <svg
+              viewBox="0 0 320 440"
+              className="w-full h-auto drop-shadow-md"
+              style={{ maxHeight: "480px" }}
+            >
+              {/* Silhueta do Brasil - contorno simplificado */}
+              <path
+                d="M180 50 
+                   Q210 48 235 58 L245 65 
+                   Q270 55 285 62 L290 85
+                   Q310 95 312 115 L308 140
+                   Q315 160 308 180 L300 200
+                   Q305 220 295 235 L280 250
+                   Q275 270 260 285 L250 300
+                   Q255 320 245 335 L235 350
+                   Q220 370 205 385 L190 400
+                   Q170 415 150 420 L135 418
+                   Q115 412 105 395 L95 380
+                   Q85 360 80 340 L75 320
+                   Q70 300 72 280 L78 260
+                   Q75 240 80 220 L85 200
+                   Q80 180 88 165 L100 150
+                   Q105 130 120 115 L135 100
+                   Q140 85 155 75 L170 65
+                   Q175 55 180 50 Z"
+                fill="#FFD000"
+                fillOpacity="0.12"
+                stroke="#FFD000"
+                strokeOpacity="0.35"
+                strokeWidth="1.5"
+              />
+              {/* Norte */}
+              <path
+                d="M180 50 Q210 48 235 58 L245 65 Q270 55 285 62 L290 85 Q310 95 312 115 L308 140 Q315 160 308 180 L300 200 Q305 220 295 235 L280 250 Q275 255 265 255 L260 250 Q250 240 240 235 L230 230 Q220 225 210 220 L200 215 Q190 210 185 205 L180 200 Q175 195 170 190 L165 185 Q160 175 158 165 L155 155 Q153 140 155 125 L158 110 Q160 95 165 85 L170 75 Q175 65 178 58 Z"
+                fill="#FFD000"
+                fillOpacity="0.15"
+                stroke="none"
+              />
+              {/* Nordeste */}
+              <path
+                d="M260 250 L265 255 Q275 255 280 250 Q285 255 290 260 L295 265 Q300 270 305 275 L310 280 Q315 285 312 290 L308 295 Q305 300 300 305 L295 310 Q290 315 285 320 L280 325 Q275 330 270 335 L265 340 Q260 345 255 350 L250 355 Q245 360 240 365 L235 370 Q230 375 225 380 L220 385 Q215 390 210 395 L205 400 Q200 405 195 410 L190 415 Q185 418 180 420 L175 422 Q170 424 165 425 L160 426 Q155 427 150 428 L145 428 Q140 427 135 425 L130 423 Q125 420 120 418 L115 415 Q110 412 105 408 L100 404 Q95 400 92 395 L90 390 Q88 385 86 380 L85 375 Q84 370 83 365 L82 360 Q81 355 80 350 L79 345 Q78 340 77 335 L76 330 Q75 325 74 320 L73 315 Q72 310 72 305 L72 300 Q72 295 73 290 L74 285 Q75 280 76 275 L78 270 Q80 265 82 260 L84 255 Q86 250 88 245 L90 240 Q92 235 94 230 L96 225 Q98 220 100 215 L105 210 Q110 205 115 200 L120 195 Q125 190 130 185 L135 180 Q140 175 145 170 L150 165 Q155 160 160 155 L165 150 Q170 145 175 140 L180 135 Q185 130 190 125 L195 120 Q200 115 205 110 L210 105 Q215 100 220 95 L225 90 Q230 85 235 80 L240 75 Q245 70 250 65 L255 60 Q260 55 265 58 L268 60 Q270 62 272 65 L274 68 Q276 70 278 72 L280 74 Q282 76 284 78 L286 80 Q288 82 290 84 L292 86 Q294 88 296 90 L298 92 Q300 94 302 96 L304 98 Q306 100 308 102 L310 104 Q312 106 313 108 L314 110 Q315 112 316 114 L316 116 Q316 118 315 120 L314 122 Q313 124 312 126 L310 128 Q308 130 306 132 L304 134 Q302 136 300 138 L298 140 Q296 142 294 144 L292 146 Q290 148 288 150 L286 152 Q284 154 282 156 L280 158 Q278 160 276 162 L274 164 Q272 166 270 168 L268 170 Q266 172 264 174 L262 176 Q260 178 258 180 L256 182 Q254 184 252 186 L250 188 Q248 190 246 192 L244 194 Q242 196 240 198 L238 200 Q236 202 234 204 L232 206 Q230 208 228 210 L226 212 Q224 214 222 216 L220 218 Q218 220 216 222 L214 224 Q212 226 210 228 L208 230 Q206 232 204 234 L202 236 Q200 238 198 240 L196 242 Q194 244 192 246 L190 248 Q188 250 186 252 L184 254 Q182 256 180 258 L178 260 Q176 262 174 264 L172 266 Q170 268 168 270 L166 272 Q164 274 162 276 L160 278 Q158 280 156 282 L154 284 Q152 286 150 288 L148 290 Q146 292 144 294 L142 296 Q140 298 138 300 L136 302 Q134 304 132 306 L130 308 Q128 310 126 312 L124 314 Q122 316 120 318 L118 320 Q116 322 114 324 L112 326 Q110 328 108 330 L106 332 Q104 334 102 336 L100 338 Q98 340 96 342 L94 344 Q92 346 90 348 L88 350 Q86 352 84 354 L82 356 Q80 358 78 360 L76 362 Q74 364 72 366"
+                fill="#FFD000"
+                fillOpacity="0.15"
+                stroke="none"
+              />
+              {/* Sudeste */}
+              <path
+                d="M245 335 L250 355 L255 370 L260 385 Q250 395 240 400 L225 405 Q210 408 195 410 L180 412 Q165 413 155 410 L145 405 Q140 400 135 395 L130 388 Q128 380 126 372 L125 365 Q124 358 123 352 L122 345 Q121 340 120 335 L119 330 Q118 325 118 320 L118 315 Q118 310 119 305 L120 300 Q121 295 122 290 L123 285 Q124 280 125 275 L126 270 Q127 265 128 260 L129 255 Q130 250 131 245 L132 240 Q133 235 134 230 L135 225 Q136 220 137 215 L138 210 Q139 205 140 200 L141 195 Q142 190 143 185 L144 180 Q145 175 146 170 L147 165 Q148 160 149 155 L150 150 Q151 145 152 140 L153 135 Q154 130 155 125 L156 120 Q157 115 158 110 L159 105 Q160 100 161 95 L162 90 Q163 85 164 80 L165 75 Q166 70 167 65 L168 60 Q169 55 170 50"
+                fill="#FFD000"
+                fillOpacity="0.15"
+                stroke="none"
+              />
+              {/* Sul */}
+              <path
+                d="M195 410 L200 415 Q205 420 210 425 L215 430 Q220 435 225 438 L230 440 Q235 442 240 443 L245 444 Q250 445 255 445 L260 445 Q265 445 270 444 L275 443 Q280 442 285 440 L290 438 Q295 435 300 432 L305 429 Q310 425 315 420 L318 415 Q320 410 318 405 L316 400 Q314 395 312 390 L310 385 Q308 380 306 375 L304 370 Q302 365 300 360 L298 355 Q296 350 294 345 L292 340 Q290 335 288 330 L286 325 Q284 320 282 315 L280 310 Q278 305 276 300 L274 295 Q272 290 270 285 L268 280 Q266 275 264 270 L262 265 Q260 260 258 255 L256 250 Q254 245 252 240 L250 235 Q248 230 246 225 L244 220 Q242 215 240 210 L238 205 Q236 200 234 195 L232 190 Q230 185 228 180 L226 175 Q224 170 222 165 L220 160 Q218 155 216 150 L214 145 Q212 140 210 135 L208 130 Q206 125 204 120 L202 115 Q200 110 198 105 L196 100 Q194 95 192 90 L190 85 Q188 80 186 75 L184 70 Q182 65 180 60"
+                fill="#FFD000"
+                fillOpacity="0.15"
+                stroke="none"
+              />
+
+              {/* Círculos dos estados */}
+              {estadosData.map((estado) => {
+                const pos = estadoPositions[estado.sigla];
+                if (!pos) return null;
+                const isFiltered = !filteredSiglas.has(estado.sigla);
+                const isSelected = selectedSigla === estado.sigla;
+                const isHovered = hoveredEstado === estado.sigla;
+                const hasVendedores = estado.vendedores.length > 0;
+
+                if (isFiltered) {
+                  return (
+                    <circle
+                      key={estado.sigla}
+                      cx={pos.cx}
+                      cy={pos.cy}
+                      r={pos.r * 0.6}
+                      fill="#e5e5e5"
+                      opacity="0.5"
+                    />
+                  );
+                }
+
+                return (
+                  <g
+                    key={estado.sigla}
+                    className="cursor-pointer"
+                    onClick={() => handleEstadoClick(estado.sigla)}
+                    onMouseEnter={() => setHoveredEstado(estado.sigla)}
+                    onMouseLeave={() => setHoveredEstado(null)}
+                  >
+                    {/* Pulse ring para estados com vendedores */}
+                    {hasVendedores && !isSelected && (
+                      <circle
+                        cx={pos.cx}
+                        cy={pos.cy}
+                        r={pos.r + 4}
+                        fill="none"
+                        stroke="#FF4444"
+                        strokeWidth="1"
+                        opacity={isHovered ? 0.4 : 0}
+                        className="transition-opacity duration-300"
+                      />
+                    )}
+                    <circle
+                      cx={pos.cx}
+                      cy={pos.cy}
+                      r={isSelected ? pos.r + 2 : pos.r}
+                      fill={isSelected ? "#E63946" : hasVendedores ? "#E63946" : "#d4d4d8"}
+                      stroke="white"
+                      strokeWidth={isSelected ? 2.5 : 1.5}
+                      className="transition-all duration-300"
+                      style={{
+                        filter: isSelected || isHovered ? "drop-shadow(0 2px 6px rgba(230,57,70,0.4))" : "none",
+                      }}
+                    />
+                    <text
+                      x={pos.cx}
+                      y={pos.cy}
+                      textAnchor="middle"
+                      dominantBaseline="central"
+                      fill={hasVendedores ? "white" : "#a1a1aa"}
+                      fontSize={pos.r > 12 ? 9 : 7}
+                      fontWeight="700"
+                      className="pointer-events-none"
+                    >
+                      {estado.sigla}
+                    </text>
+                  </g>
+                );
+              })}
+            </svg>
+
+            {/* Tooltip flutuante no hover */}
+            <AnimatePresence>
+              {hoveredEstado && !selectedSigla && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute z-20 pointer-events-none"
+                  style={{
+                    left: `${(estadoPositions[hoveredEstado]?.cx ?? 0) / 3.2}%`,
+                    top: `${(estadoPositions[hoveredEstado]?.cy ?? 0) / 4.4}%`,
+                  }}
+                >
+                  {(() => {
+                    const estado = getEstadoBySigla(hoveredEstado);
+                    if (!estado) return null;
+                    return (
+                      <div className="bg-white rounded-lg shadow-xl border border-gray-100 px-3 py-2 whitespace-nowrap">
+                        <p className="text-xs font-bold text-gray-900">{estado.nome}</p>
+                        <p className="text-[10px] text-gray-500">
+                          {estado.vendedores.length > 0
+                            ? `${estado.vendedores.length} vendedor${estado.vendedores.length > 1 ? "es" : ""}`
+                            : "Em breve"}
+                        </p>
+                      </div>
+                    );
+                  })()}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Legend */}
+            <div className="absolute bottom-2 right-2 bg-white/90 backdrop-blur-sm rounded-lg p-2.5 border border-gray-100 shadow-sm">
+              <div className="flex items-center gap-1.5 mb-1">
+                <div className="w-2.5 h-2.5 rounded-full bg-regina-red" />
+                <span className="text-[10px] text-gray-600">Com vendedor</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-gray-300" />
+                <span className="text-[10px] text-gray-600">Sem vendedor</span>
+              </div>
+            </div>
+          </div>
+        </ScrollReveal>
+
+        {/* Estado detail cards */}
+        <AnimatePresence>
+          {selectedEstado && (
+            <motion.div
+              initial={{ opacity: 0, y: 20, height: 0 }}
+              animate={{ opacity: 1, y: 0, height: "auto" }}
+              exit={{ opacity: 0, y: 20, height: 0 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+              className="overflow-hidden"
+            >
+              <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 md:p-6 max-w-2xl mx-auto">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-regina-red/10 flex items-center justify-center text-regina-red font-bold text-sm">
+                      {selectedEstado.sigla}
+                    </div>
+                    <div>
+                      <h3 className="text-base md:text-lg font-bold text-gray-900">{selectedEstado.nome}</h3>
+                      <p className="text-xs text-gray-500">{selectedEstado.regiao}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                    <Users className="w-3.5 h-3.5" />
+                    <span>{selectedEstado.vendedores.length} vendedor{selectedEstado.vendedores.length > 1 ? "es" : ""}</span>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {selectedEstado.vendedores.map((v, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.05 }}
+                      className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 p-3 rounded-lg bg-gray-50 hover:bg-regina-red/5 transition-colors border border-gray-100 group"
+                    >
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-gray-900 group-hover:text-regina-red transition-colors">{v.nome}</p>
+                        <div className="flex items-center gap-1 mt-0.5">
+                          <Building2 className="w-3 h-3 text-gray-400" />
+                          <span className="text-xs text-gray-500">{v.empresa}</span>
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-3">
+                        <a
+                          href={`tel:${v.telefone.replace(/\D/g, "")}`}
+                          className="flex items-center gap-1 text-xs text-gray-600 hover:text-regina-red transition-colors"
+                        >
+                          <Phone className="w-3 h-3" />
+                          {v.telefone}
+                        </a>
+                        <a
+                          href={`mailto:${v.email}`}
+                          className="flex items-center gap-1 text-xs text-gray-600 hover:text-regina-red transition-colors"
+                        >
+                          <Mail className="w-3 h-3" />
+                          <span className="hidden sm:inline">{v.email}</span>
+                        </a>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </section>
+  );
+}

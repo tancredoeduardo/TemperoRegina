@@ -1,0 +1,55 @@
+import { useState, useEffect, useCallback } from "react";
+
+export interface WishlistItem {
+  id: string;
+  name: string;
+  image: string;
+  category: string;
+}
+
+const STORAGE_KEY = "regina_wishlist";
+
+function loadFromStorage(): WishlistItem[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveToStorage(items: WishlistItem[]) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+}
+
+export function useWishlist() {
+  const [items, setItems] = useState<WishlistItem[]>(loadFromStorage);
+
+  useEffect(() => {
+    saveToStorage(items);
+  }, [items]);
+
+  const addItem = useCallback((item: WishlistItem) => {
+    setItems((prev) => {
+      if (prev.find((p) => p.id === item.id)) return prev;
+      return [...prev, item];
+    });
+  }, []);
+
+  const removeItem = useCallback((id: string) => {
+    setItems((prev) => prev.filter((p) => p.id !== id));
+  }, []);
+
+  const hasItem = useCallback(
+    (id: string) => items.some((p) => p.id === id),
+    [items]
+  );
+
+  const clearItems = useCallback(() => {
+    setItems([]);
+  }, []);
+
+  const count = items.length;
+
+  return { items, count, addItem, removeItem, hasItem, clearItems };
+}

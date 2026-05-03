@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Catálogo Imprimível - Tempero Regina</title>
+    <style>
+      :root { --red:#b71c1c; --red-deep:#8f1212; --gold:#f7b500; --ink:#182230; --muted:#556070; --bg:#f3f6fb; --line:#dbe3ee; }
+      * { box-sizing: border-box; }
+      body { margin:0; font-family: "Segoe UI", Arial, sans-serif; color:var(--ink); background:var(--bg); }
+      .top {
+        background:
+          radial-gradient(700px 260px at 10% -30%, rgba(247,181,0,.4), transparent 60%),
+          linear-gradient(120deg, var(--red), var(--red-deep));
+        color:#fff; padding:34px 18px;
+      }
+      .top h1 { margin:0; font-size: clamp(1.4rem, 3vw, 2rem); }
+      .top p { margin:8px 0 0; opacity:.92; font-size:.95rem; }
+      .wrap { max-width:1080px; margin:20px auto; padding:0 14px 40px; }
+      .actions { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+      .btn {
+        border:0; border-radius:10px; padding:10px 14px; font-weight:700; cursor:pointer; text-decoration:none;
+        transition: transform .14s ease, box-shadow .14s ease, background-color .14s ease;
+      }
+      .btn:hover { transform: translateY(-1px); box-shadow:0 6px 14px rgba(15,23,42,.1); }
+      .btn-primary { background:var(--red); color:#fff; }
+      .btn-primary:hover { background:var(--red-deep); }
+      .btn-secondary { background:#fff; color:var(--ink); border:1px solid var(--line); }
+      .state { background:#fff; border:1px solid var(--line); border-radius:12px; padding:10px 12px; color:var(--muted); margin-bottom:14px; }
+      .category { background:#fff; border:1px solid var(--line); border-radius:12px; margin:0 0 14px; overflow:hidden; box-shadow:0 1px 2px rgba(15,23,42,.04); }
+      .category h2 { margin:0; background:#fff8e1; color:#6d4c00; padding:10px 12px; font-size:1rem; border-bottom:1px solid #f4e4b3; }
+      .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:12px; padding:12px; }
+      .card {
+        border:1px solid #e8edf4; border-radius:10px; padding:10px; background:#fff; min-height:180px; display:flex; flex-direction:column;
+        transition: border-color .14s ease, transform .14s ease;
+      }
+      .card:hover { transform: translateY(-2px); border-color:#d2dbe7; }
+      .card img { width:100%; height:110px; object-fit:contain; background:#f6f8fb; border-radius:8px; }
+      .card h3 { margin:8px 0 0; font-size:.86rem; line-height:1.35; }
+      .link { margin-top:auto; font-size:.8rem; color:var(--red); font-weight:700; text-decoration:none; }
+      .link:hover { text-decoration:underline; }
+      @media print {
+        body { background:#fff; }
+        .actions { display:none !important; }
+        .category { break-inside: avoid; }
+        .card { break-inside: avoid; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="top">
+      <h1>Catálogo Imprimível Tempero Regina</h1>
+      <p>Versão pronta para impressão e compartilhamento comercial.</p>
+    </header>
+    <main class="wrap">
+      <div class="actions">
+        <a class="btn btn-primary" href="/download/catalogo-regina.pdf" download="catalogo-regina.pdf" type="application/pdf">Baixar PDF</a>
+        <button class="btn btn-secondary" onclick="window.print()">Imprimir página</button>
+        <a class="btn btn-secondary" href="/catalogo">Voltar ao Catálogo Interativo</a>
+      </div>
+      <div id="state" class="state">Carregando categorias...</div>
+      <section id="catalog"></section>
+    </main>
+    <script>
+      async function render() {
+        const state = document.getElementById("state");
+        const root = document.getElementById("catalog");
+        try {
+          const res = await fetch("/api/products");
+          if (!res.ok) throw new Error("Falha na API");
+          const data = await res.json();
+          const categories = data.categories || [];
+          if (!categories.length) throw new Error("Sem produtos");
+          state.textContent = `${categories.length} categorias carregadas para impressão.`;
+          root.innerHTML = categories.map((category) => `
+            <article class="category">
+              <h2>${category.title} (${category.products.length})</h2>
+              <div class="grid">
+                ${category.products.map((p) => `
+                  <div class="card">
+                    <img loading="lazy" src="${p.image}" alt="${p.name}" />
+                    <h3>${p.name}</h3>
+                    <a class="link" href="${p.downloadUrl}" target="_blank" rel="noopener">Baixar imagem</a>
+                  </div>
+                `).join("")}
+              </div>
+            </article>
+          `).join("");
+        } catch (e) {
+          state.textContent = "Não foi possível carregar o catálogo agora.";
+          root.innerHTML = "";
+        }
+      }
+      render();
+    </script>
+  </body>
+</html>

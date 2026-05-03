@@ -1,0 +1,249 @@
+import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+import {
+  Search,
+  Filter,
+  Download,
+  Heart,
+  ChevronRight,
+  LayoutGrid,
+  List,
+  SlidersHorizontal,
+} from "lucide-react";
+import Navbar from "@/components/feature/Navbar";
+import Footer from "@/components/feature/Footer";
+import ScrollReveal from "@/components/base/ScrollReveal";
+import { productCategories, getAllProducts } from "@/mocks/products";
+import { useWishlist } from "@/hooks/useWishlist";
+
+const allCategories = ["Todas", ...productCategories.map((c) => c.title)];
+
+export default function CatalogPage() {
+  const [activeCategory, setActiveCategory] = useState("Todas");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [showFilters, setShowFilters] = useState(false);
+  const [heroVisible, setHeroVisible] = useState(false);
+  const { addItem, removeItem, hasItem } = useWishlist();
+
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    setHeroVisible(true);
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) setShowFilters(false);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const allProducts = getAllProducts();
+
+  const filtered = allProducts.filter((p) => {
+    const matchesCategory =
+      activeCategory === "Todas" || p.categoryTitle === activeCategory;
+    const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
+  const groupedByCategory = activeCategory === "Todas" && !searchTerm;
+
+  return (
+    <div className="min-h-screen bg-regina-gray-warm flex flex-col">
+      <Navbar />
+
+      <div className="relative w-full h-[200px] md:h-[280px] overflow-hidden" style={{ marginTop: "80px" }}>
+        <div className="absolute inset-0 bg-gradient-to-br from-regina-red via-red-700 to-red-900" />
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-white/20" />
+          <div className="absolute bottom-10 right-10 w-48 h-48 rounded-full bg-white/10" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-white/5" />
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center px-4">
+            <h1 className={`text-3xl md:text-5xl font-bold text-white uppercase tracking-wide mb-2 drop-shadow-lg transition-all duration-700 ${heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
+              Catálogo de Produtos
+            </h1>
+            <p className={`text-sm md:text-base text-white/80 max-w-lg mx-auto drop-shadow-md transition-all duration-700 delay-150 ${heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
+              {allProducts.length} produtos divididos em {productCategories.length} categorias. Encontre o tempero perfeito para sua receita.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <section className="py-4 md:py-5 bg-white border-b border-gray-100 sticky top-16 md:top-20 z-30">
+        <div className="max-w-6xl mx-auto px-4 md:px-6">
+          <div className="flex flex-col md:flex-row gap-3 md:gap-4 items-start md:items-center justify-between">
+            <div className="flex items-center gap-3 w-full md:w-auto">
+              <div className="relative flex-1 md:w-72">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input type="text" placeholder="Buscar produtos..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-regina-red focus:ring-1 focus:ring-regina-red/20 bg-white" />
+              </div>
+              <button type="button" onClick={() => setShowFilters(!showFilters)} className="md:hidden w-10 h-10 flex items-center justify-center rounded-lg border border-gray-200 text-gray-600 hover:border-regina-red hover:text-regina-red transition-all" aria-label="Filtros">
+                <SlidersHorizontal className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="hidden md:flex items-center gap-2 flex-wrap">
+              <Filter className="w-4 h-4 text-gray-400" />
+              {allCategories.map((cat) => (
+                <button key={cat} type="button" onClick={() => setActiveCategory(cat)} className={`px-3 py-1.5 text-xs md:text-sm font-medium rounded-full whitespace-nowrap transition-all ${activeCategory === cat ? "bg-regina-red text-white shadow-sm" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            <div className="hidden md:flex items-center gap-1 bg-gray-100 rounded-lg p-0.5">
+              <button type="button" onClick={() => setViewMode("grid")} className={`w-8 h-8 flex items-center justify-center rounded-md transition-all ${viewMode === "grid" ? "bg-white shadow-sm text-regina-red" : "text-gray-500"}`} aria-label="Visualização em grade"><LayoutGrid className="w-4 h-4" /></button>
+              <button type="button" onClick={() => setViewMode("list")} className={`w-8 h-8 flex items-center justify-center rounded-md transition-all ${viewMode === "list" ? "bg-white shadow-sm text-regina-red" : "text-gray-500"}`} aria-label="Visualização em lista"><List className="w-4 h-4" /></button>
+            </div>
+          </div>
+
+          {showFilters && (
+            <div className="md:hidden mt-3 flex flex-wrap gap-2">
+              {allCategories.map((cat) => (
+                <button key={cat} type="button" onClick={() => setActiveCategory(cat)} className={`px-3 py-1.5 text-xs font-medium rounded-full whitespace-nowrap transition-all ${activeCategory === cat ? "bg-regina-red text-white" : "bg-gray-100 text-gray-600"}`}>
+                  {cat}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      <div className="max-w-6xl mx-auto px-4 md:px-6 py-3">
+        <nav className="flex items-center gap-2 text-xs md:text-sm text-gray-500">
+          <Link to="/" className="hover:text-regina-red transition-colors">Home</Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-gray-800 font-medium">{activeCategory === "Todas" ? "Todos os Produtos" : activeCategory}</span>
+          {searchTerm && <><ChevronRight className="w-3 h-3" /><span className="text-regina-red font-medium">Busca: &ldquo;{searchTerm}&rdquo;</span></>}
+        </nav>
+        <p className="text-xs text-gray-400 mt-1">{filtered.length} produtos encontrados</p>
+      </div>
+
+      <section ref={sectionRef} className="flex-1 py-6 md:py-10">
+        <div className="max-w-6xl mx-auto px-4 md:px-6">
+          <ScrollReveal>
+            {filtered.length === 0 ? (
+              <div className="text-center py-16">
+                <Search className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                <p className="text-gray-500 text-sm md:text-base">Nenhum produto encontrado.</p>
+                <button type="button" onClick={() => { setSearchTerm(""); setActiveCategory("Todas"); }} className="mt-3 text-sm text-regina-red hover:underline font-medium">Limpar filtros</button>
+              </div>
+            ) : groupedByCategory ? (
+              <div className="space-y-12 md:space-y-16">
+                {productCategories.map((category) => (
+                  <div key={category.id}>
+                    <div className="flex items-center justify-between mb-4 md:mb-6">
+                      <h2 className="text-lg md:text-xl font-bold text-gray-900 uppercase tracking-wide">{category.title}</h2>
+                      <span className="text-xs text-gray-400">{category.products.length} produtos</span>
+                    </div>
+                    <ProductGrid products={category.products} categoryTitle={category.title} viewMode={viewMode} hasItem={hasItem} addItem={addItem} removeItem={removeItem} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <ProductGrid products={filtered} categoryTitle={activeCategory} viewMode={viewMode} hasItem={hasItem} addItem={addItem} removeItem={removeItem} showCategory />
+            )}
+          </ScrollReveal>
+        </div>
+      </section>
+
+      <ScrollReveal>
+        <section className="py-10 md:py-14 bg-regina-red">
+          <div className="max-w-4xl mx-auto px-4 md:px-6 text-center">
+            <h2 className="text-xl md:text-2xl font-bold text-white uppercase tracking-wide mb-3">Quer todos os produtos em um só lugar?</h2>
+            <p className="text-sm md:text-base text-white/80 mb-6 max-w-lg mx-auto">Baixe nosso catálogo completo em PDF e tenha todas as informações na palma da mão.</p>
+            <a href="./download/catalogo-regina.pdf" download className="group inline-flex items-center gap-2 bg-regina-yellow text-regina-dark text-sm font-bold px-6 py-3 rounded-md hover:bg-regina-yellow-light transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
+              <Download className="w-4 h-4 group-hover:animate-bounce" />
+              Download do Catálogo Completo
+            </a>
+          </div>
+        </section>
+      </ScrollReveal>
+
+      <Footer />
+    </div>
+  );
+}
+
+interface ProductGridProps {
+  products: Array<{
+    id: string;
+    name: string;
+    image: string;
+    downloadUrl: string;
+    categoryTitle?: string;
+  }>;
+  categoryTitle: string;
+  viewMode: "grid" | "list";
+  hasItem: (id: string) => boolean;
+  addItem: (item: { id: string; name: string; image: string; category: string }) => void;
+  removeItem: (id: string) => void;
+  showCategory?: boolean;
+}
+
+function ProductGrid({ products, categoryTitle, viewMode, hasItem, addItem, removeItem, showCategory }: ProductGridProps) {
+  if (viewMode === "list") {
+    return (
+      <div className="space-y-3">
+        {products.map((product) => {
+          const inWishlist = hasItem(product.id);
+          return (
+            <div key={product.id} className="group flex items-center gap-4 bg-white rounded-xl p-3 md:p-4 border border-gray-100 hover:border-regina-red/20 hover:shadow-lg transition-all duration-300">
+              <Link to={`/produto/${product.id}`} className="w-20 h-20 md:w-24 md:h-24 shrink-0 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg flex items-center justify-center p-2 group-hover:from-regina-yellow/5 group-hover:to-regina-red/5 transition-colors">
+                <img src={product.image} alt={product.name} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" />
+              </Link>
+              <div className="flex-1 min-w-0">
+                {showCategory && product.categoryTitle && (
+                  <span className="text-[10px] md:text-xs text-regina-red font-medium uppercase tracking-wide">{product.categoryTitle}</span>
+                )}
+                <Link to={`/produto/${product.id}`}>
+                  <h3 className="text-sm md:text-base font-bold text-gray-900 group-hover:text-regina-red transition-colors line-clamp-2">{product.name}</h3>
+                </Link>
+                <span className="text-xs text-gray-400">{categoryTitle}</span>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <button type="button" onClick={(e) => { e.stopPropagation(); if (inWishlist) removeItem(product.id); else addItem({ id: product.id, name: product.name, image: product.image, category: categoryTitle }); }} className={`w-8 h-8 flex items-center justify-center rounded-full transition-all ${inWishlist ? "bg-regina-red text-white" : "bg-gray-100 text-gray-400 hover:bg-regina-red hover:text-white"}`} aria-label={inWishlist ? "Remover da lista" : "Adicionar à lista"}>
+                  <Heart className={`w-4 h-4 ${inWishlist ? "fill-current" : ""}`} />
+                </button>
+                <a href={product.downloadUrl} download className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-regina-red hover:text-white transition-all" aria-label="Download"><Download className="w-4 h-4" /></a>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
+      {products.map((product) => {
+        const inWishlist = hasItem(product.id);
+        return (
+          <div key={product.id} className="group bg-white rounded-xl border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-regina-red/20">
+            <div className="relative aspect-square bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-3 group-hover:from-regina-yellow/5 group-hover:to-regina-red/5 transition-colors duration-300 cursor-pointer" onClick={() => { window.REACT_APP_NAVIGATE?.(`/produto/${product.id}`); }}>
+              <img src={product.image} alt={product.name} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" />
+              <button type="button" onClick={(e) => { e.stopPropagation(); if (inWishlist) removeItem(product.id); else addItem({ id: product.id, name: product.name, image: product.image, category: categoryTitle }); }} className={`absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300 ${inWishlist ? "bg-regina-red text-white shadow-md" : "bg-white/80 text-gray-400 hover:bg-regina-red hover:text-white opacity-0 group-hover:opacity-100"}`} aria-label={inWishlist ? "Remover da lista" : "Adicionar à lista"}>
+                <Heart className={`w-4 h-4 ${inWishlist ? "fill-current" : ""}`} />
+              </button>
+            </div>
+            <div className="p-3 md:p-4">
+              {showCategory && product.categoryTitle && (
+                <span className="text-[10px] text-regina-red font-medium uppercase tracking-wide">{product.categoryTitle}</span>
+              )}
+              <h4 className="text-xs md:text-sm text-gray-800 leading-tight line-clamp-2 mb-2 min-h-[2.5em] group-hover:text-regina-red transition-colors duration-300 cursor-pointer" onClick={() => { window.REACT_APP_NAVIGATE?.(`/produto/${product.id}`); }}>{product.name}</h4>
+              <a href={product.downloadUrl} download className="inline-flex items-center gap-1 text-xs text-regina-red hover:text-regina-red-dark font-medium transition-colors group/download" onClick={(e) => e.stopPropagation()}>
+                <Download className="w-3 h-3 group-hover/download:animate-bounce" />
+                <span>DOWNLOAD</span>
+              </a>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}

@@ -1,0 +1,185 @@
+export const heroSlides = [
+  {
+    id: 1,
+    image: "https://temperoregina.com.br/adm/midia/image/b2001080134050.webp",
+    alt: "Comida um",
+  },
+  {
+    id: 2,
+    image: "https://temperoregina.com.br/adm/midia/image/b2001080134170.webp",
+    alt: "Comida dois",
+  },
+];
+
+export const marcasImages = [
+  {
+    id: 1,
+    image: "https://temperoregina.com.br/adm/midia/image/b2412231555471.webp",
+    alt: "Marca 1",
+  },
+  {
+    id: 2,
+    image: "https://temperoregina.com.br/adm/midia/image/b2412231555470.webp",
+    alt: "Marca 2",
+  },
+  {
+    id: 3,
+    image: "https://temperoregina.com.br/adm/midia/image/b2412231555474.webp",
+    alt: "Marca 3",
+  },
+  {
+    id: 4,
+    image: "https://temperoregina.com.br/adm/midia/image/b2412231555473.webp",
+    alt: "Marca 4",
+  },
+  {
+    id: 5,
+    image: "https://temperoregina.com.br/adm/midia/image/b2412231555472.webp",
+    alt: "Marca 5",
+  },
+];
+
+export const clientesImages = [
+  {
+    id: 1,
+    image: "https://temperoregina.com.br/adm/midia/image/b2412261046167.webp",
+    alt: "Cliente 1",
+  },
+  {
+    id: 2,
+    image: "https://temperoregina.com.br/adm/midia/image/b24122610461615.webp",
+    alt: "Cliente 2",
+  },
+  {
+    id: 3,
+    image: "https://temperoregina.com.br/adm/midia/image/b2412261048130.webp",
+    alt: "Cliente 3",
+  },
+  {
+    id: 4,
+    image: "https://temperoregina.com.br/adm/midia/image/b2412261046161.webp",
+    alt: "Cliente 4",
+  },
+  {
+    id: 5,
+    image: "https://temperoregina.com.br/adm/midia/image/b24122610461616.webp",
+    alt: "Cliente 5",
+  },
+  {
+    id: 6,
+    image: "https://temperoregina.com.br/adm/midia/image/b24122610461617.webp",
+    alt: "Cliente 6",
+  },
+  {
+    id: 7,
+    image: "https://temperoregina.com.br/adm/midia/image/b24122610461618.webp",
+    alt: "Cliente 7",
+  },
+  {
+    id: 8,
+    image: "https://temperoregina.com.br/adm/midia/image/b2412270845340.webp",
+    alt: "Cliente 8",
+  },
+  {
+    id: 9,
+    image: "https://temperoregina.com.br/adm/midia/image/b2412270845341.webp",
+    alt: "Cliente 9",
+  },
+  {
+    id: 10,
+    image: "https://temperoregina.com.br/adm/midia/image/b2412270845342.webp",
+    alt: "Cliente 10",
+  },
+  {
+    id: 11,
+    image: "https://temperoregina.com.br/adm/midia/image/b2412261046163.webp",
+    alt: "Cliente 11",
+  },
+  {
+    id: 12,
+    image: "https://temperoregina.com.br/adm/midia/image/b2412261046164.webp",
+    alt: "Cliente 12",
+  },
+  {
+    id: 13,
+    image: "https://temperoregina.com.br/adm/midia/image/b2412261046165.webp",
+    alt: "Cliente 13",
+  },
+  {
+    id: 14,
+    image: "https://temperoregina.com.br/adm/midia/image/b2412261046169.webp",
+    alt: "Cliente 14",
+  },
+  {
+    id: 15,
+    image: "https://temperoregina.com.br/adm/midia/image/b24122610461610.webp",
+    alt: "Cliente 15",
+  },
+  {
+    id: 16,
+    image: "https://temperoregina.com.br/adm/midia/image/b2412261046160.webp",
+    alt: "Cliente 16",
+  },
+  {
+    id: 17,
+    image: "https://temperoregina.com.br/adm/midia/image/b24122610461613.webp",
+    alt: "Cliente 17",
+  },
+  {
+    id: 18,
+    image: "https://temperoregina.com.br/adm/midia/image/b24122610461614.webp",
+    alt: "Cliente 18",
+  },
+];
+
+export const receitasData = [
+  {
+    id: 1,
+    title: "Risoto de Camarão",
+    image: "https://temperoregina.com.br/adm/midia/image/b2001080156420.webp",
+    ingredientes: [
+      "110g de manteiga (dividida 20g para o camarão + 30g para iniciar o risoto + 60g para finalizar o risoto)",
+      "400 gr de camarão",
+      "1/2 cebola pequena picada",
+      "1 dente de alho picado",
+      "1/4 pimenta dedo de moça picada (opcional)",
+      "150 gr de tomate picado (sem semente) – eu usei tomate cereja mas pode ser qualquer um maduro",
+      "200 gr de arroz para risotto (arbóreo, carnarolli..)",
+      "60 ml de vinho branco seco",
+      "2 litros de caldo de peixe ou frango",
+      "70 gr de queijo parmesão",
+      "2 colheres (sopa) de salsinha picadinha",
+      "sal e pimenta a gosto",
+    ],
+  },
+  {
+    id: 2,
+    title: "Carne de Panela",
+    image: "https://temperoregina.com.br/adm/midia/image/b2107271418100.webp",
+    ingredientes: [
+      "2 colheres de sopa de óleo",
+      "1 unidade de cebola grande picada",
+      "3 dentes de alho amassados",
+      "700 gramas de carne cortada em cubos (patinho, músculo ou acém)",
+      "5 unidades de batatas cortadas em cubos médios",
+      "2 colheres de sopa de molho inglês Regina",
+      "1 colher de sopa de shoyu Regina",
+      "1 unidade de folha de louro Regina",
+      "3 colheres de sopa de extrato de tomate",
+      "À gosto cheiro verde, sal e pimenta-do-reino Regina",
+    ],
+    modoPreparo: [
+      "Leve uma panela de pressão com óleo ao fogo e refogue a cebola e o alho;",
+      "Depois, adicione a carne junto com a cebola e o alho e deixe refogando até a carne ficar dourada;",
+      "Em seguida, tempere com sal, pimenta-do-reino e misture bem;",
+      "Adicione o molho inglês, o shoyu e o extrato de tomate e mexa tudo novamente;",
+      "Em seguida, coloque água morna, mas atenção para deixar a água mais ou menos um dedo abaixo da altura da carne na panela;",
+      "Coloque a folha de louro, mexa tudo novamente e tampe a panela;",
+      "Deixe a carne de panela cozinhando em fogo médio, assim que pegar pressão abaixe o fogo e deixe cozinhar por mais 30 minutos;",
+      "Quando passar os 30 minutos, desligue o fogo e espere a pressão sair sozinha da panela;",
+      "Após esse tempo, abra a panela e coloque as batatas para cozinhar (se necessário, acrescente mais um pouco de água morna);",
+      "Deixe cozinhando por 15 minutos ou até que as batatas fiquem macias;",
+      "Finalize com cheiro verde. Agora é só servir acompanhado de arroz.",
+    ],
+  },
+];

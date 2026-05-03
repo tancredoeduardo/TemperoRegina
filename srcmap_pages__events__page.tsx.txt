@@ -1,0 +1,312 @@
+import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+import { Calendar, MapPin, ChevronLeft, ChevronRight, Filter, Search } from "lucide-react";
+import Navbar from "@/components/feature/Navbar";
+import Footer from "@/components/feature/Footer";
+import { eventsData } from "@/mocks/events";
+
+const categories = ["Todos", "Feira", "Lançamento", "Workshop", "Comemoração", "Promoção", "Congress"];
+
+function formatDate(dateStr: string) {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
+}
+
+function isUpcoming(dateStr: string) {
+  return new Date(dateStr) >= new Date();
+}
+
+function isPast(dateStr: string) {
+  return new Date(dateStr) < new Date();
+}
+
+export default function Events() {
+  const [activeCategory, setActiveCategory] = useState("Todos");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [tab, setTab] = useState<"upcoming" | "past">("upcoming");
+  const heroRef = useRef<HTMLDivElement>(null);
+  const [heroVisible, setHeroVisible] = useState(false);
+
+  useEffect(() => {
+    setHeroVisible(true);
+  }, []);
+
+  const filtered = eventsData.filter((event) => {
+    const matchesCategory = activeCategory === "Todos" || event.category === activeCategory;
+    const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      event.location.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesTab = tab === "upcoming" ? isUpcoming(event.date) : isPast(event.date);
+    return matchesCategory && matchesSearch && matchesTab;
+  });
+
+  const featured = eventsData.filter((e) => e.featured && isUpcoming(e.date));
+
+  const scrollFeatured = (direction: "left" | "right") => {
+    const el = document.getElementById("featured-scroll");
+    if (!el) return;
+    el.scrollBy({ left: direction === "left" ? -340 : 340, behavior: "smooth" });
+  };
+
+  return (
+    <div className="min-h-screen bg-regina-gray-warm flex flex-col">
+      <Navbar />
+
+      {/* Hero */}
+      <div
+        ref={heroRef}
+        className="relative w-full h-[300px] md:h-[420px] overflow-hidden"
+        style={{ marginTop: "80px" }}
+      >
+        <img
+          src="https://readdy.ai/api/search-image?query=A vibrant Brazilian food festival scene with red and yellow decorations, colorful spice market stalls with various seasoning products displayed, festive outdoor event atmosphere with Brazilian flags and tropical flowers, warm golden sunset lighting, professional event photography, high quality vibrant colors"
+          alt="Eventos Tempero Regina"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center px-4">
+            <h1
+              className={`text-3xl md:text-5xl lg:text-6xl font-bold text-white uppercase tracking-wide mb-3 drop-shadow-lg transition-all duration-700 ${
+                heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+              }`}
+            >
+              Eventos Regina
+            </h1>
+            <p
+              className={`text-sm md:text-lg text-white/90 max-w-xl mx-auto drop-shadow-md transition-all duration-700 delay-150 ${
+                heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+              }`}
+            >
+              Participe dos nossos eventos, feiras, lançamentos e workshops pelo Brasil
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Featured Events */}
+      {featured.length > 0 && (
+        <section className="py-10 md:py-14 bg-white">
+          <div className="max-w-6xl mx-auto px-4 md:px-6">
+            <div className="flex items-center justify-between mb-6 md:mb-8">
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900 uppercase tracking-wide">
+                Eventos em Destaque
+              </h2>
+              <div className="hidden md:flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => scrollFeatured("left")}
+                  className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 text-gray-700 hover:bg-regina-red hover:text-white transition-all"
+                  aria-label="Anterior"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scrollFeatured("right")}
+                  className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 text-gray-700 hover:bg-regina-red hover:text-white transition-all"
+                  aria-label="Próximo"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+            <div
+              id="featured-scroll"
+              className="flex gap-4 md:gap-6 overflow-x-auto scrollbar-hide pb-2"
+            >
+              {featured.map((event) => (
+                <div
+                  key={event.id}
+                  className="shrink-0 w-72 md:w-80 bg-regina-gray-warm rounded-xl overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
+                >
+                  <div className="relative h-40 md:h-44 overflow-hidden">
+                    <img
+                      src={event.image}
+                      alt={event.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <span className="absolute top-3 left-3 bg-regina-red text-white text-[10px] md:text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wide">
+                      {event.category}
+                    </span>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="text-sm md:text-base font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-regina-red transition-colors">
+                      {event.title}
+                    </h3>
+                    <div className="flex items-center gap-2 text-xs text-gray-500 mb-1">
+                      <Calendar className="w-3 h-3 text-regina-red" />
+                      <span>{formatDate(event.date)}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <MapPin className="w-3 h-3 text-regina-red" />
+                      <span>{event.location}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Filters & Search */}
+      <section className="py-6 md:py-8 bg-white border-b border-gray-100 sticky top-16 md:top-20 z-30">
+        <div className="max-w-6xl mx-auto px-4 md:px-6">
+          <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-start md:items-center">
+            {/* Search */}
+            <div className="relative w-full md:w-72">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Buscar eventos..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-regina-red bg-white"
+              />
+            </div>
+
+            {/* Tabs */}
+            <div className="flex bg-gray-100 rounded-lg p-1">
+              <button
+                type="button"
+                onClick={() => setTab("upcoming")}
+                className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${
+                  tab === "upcoming"
+                    ? "bg-white text-regina-red shadow-sm"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                Próximos
+              </button>
+              <button
+                type="button"
+                onClick={() => setTab("past")}
+                className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${
+                  tab === "past"
+                    ? "bg-white text-regina-red shadow-sm"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                Passados
+              </button>
+            </div>
+
+            {/* Category filter */}
+            <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide w-full md:w-auto">
+              <Filter className="w-4 h-4 text-gray-400 shrink-0 hidden md:block" />
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => setActiveCategory(cat)}
+                  className={`px-3 py-1.5 text-xs md:text-sm font-medium rounded-full whitespace-nowrap transition-all ${
+                    activeCategory === cat
+                      ? "bg-regina-red text-white"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Events Grid */}
+      <section className="flex-1 py-8 md:py-14">
+        <div className="max-w-6xl mx-auto px-4 md:px-6">
+          {filtered.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-sm md:text-base">Nenhum evento encontrado.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+              {filtered.map((event) => (
+                <div
+                  key={event.id}
+                  className="group bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                >
+                  <div className="relative h-44 md:h-52 overflow-hidden">
+                    <img
+                      src={event.image}
+                      alt={event.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <span className="absolute top-3 left-3 bg-regina-yellow text-regina-dark text-[10px] md:text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wide">
+                      {event.category}
+                    </span>
+                  </div>
+                  <div className="p-4 md:p-5">
+                    <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-regina-red transition-colors duration-300">
+                      {event.title}
+                    </h3>
+                    <div className="flex items-center gap-2 text-xs md:text-sm text-gray-500 mb-1">
+                      <Calendar className="w-3.5 h-3.5 text-regina-red" />
+                      <span>{formatDate(event.date)}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs md:text-sm text-gray-500 mb-3">
+                      <MapPin className="w-3.5 h-3.5 text-regina-red" />
+                      <span>{event.location}</span>
+                    </div>
+                    <p className="text-xs md:text-sm text-gray-600 leading-relaxed line-clamp-3 mb-4">
+                      {event.description}
+                    </p>
+                    <Link
+                      to={`/eventos/${event.id}`}
+                      className="block w-full bg-regina-red text-white text-sm font-medium py-2 rounded-md hover:bg-regina-red-dark transition-all duration-300 hover:shadow-md text-center"
+                    >
+                      Saiba Mais
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-10 md:py-14 bg-regina-red">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-white uppercase tracking-wide mb-3">
+            Quer receber nossos eventos?
+          </h2>
+          <p className="text-sm md:text-base text-white/80 mb-6 max-w-lg mx-auto">
+            Cadastre-se para receber em primeira mão as novidades sobre feiras, lançamentos e workshops da Tempero Regina.
+          </p>
+          <form
+            action="https://readdy.ai/api/form/d7qm6dcdj3knvn2p28tg"
+            method="POST"
+            data-readdy-form="true"
+            className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+            onSubmit={(e) => {
+              const form = e.currentTarget;
+              const emailInput = form.querySelector('input[name="email"]') as HTMLInputElement;
+              if (!emailInput?.value?.trim()) {
+                e.preventDefault();
+                return;
+              }
+            }}
+          >
+            <input
+              type="email"
+              name="email"
+              placeholder="Seu e-mail"
+              required
+              className="flex-1 px-4 py-2.5 rounded-md text-sm border-0 focus:outline-none focus:ring-2 focus:ring-white/50 text-gray-800"
+            />
+            <button
+              type="submit"
+              className="bg-regina-yellow text-regina-dark text-sm font-bold px-6 py-2.5 rounded-md hover:bg-regina-yellow-light transition-all duration-300 whitespace-nowrap hover:shadow-lg hover:-translate-y-0.5"
+            >
+              INSCREVER-SE
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}

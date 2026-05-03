@@ -1,0 +1,66 @@
+export interface Testimonial {
+  id: number;
+  name: string;
+  role: string;
+  company: string;
+  text: string;
+  initials: string;
+  bgColor: string;
+}
+
+export const testimonialsData: Testimonial[] = [
+  {
+    id: 1,
+    name: "Carlos Eduardo",
+    role: "Proprietário",
+    company: "Restaurante Sabores do Sertão",
+    text: "Trabalhamos com Tempero Regina há mais de 15 anos. A qualidade é inegável e nossos clientes sempre elogiam o sabor dos pratos. A linha Gourmet elevou nossa cozinha a outro nível.",
+    initials: "CE",
+    bgColor: "bg-red-500",
+  },
+  {
+    id: 2,
+    name: "Maria Fernanda",
+    role: "Gerente de Compras",
+    company: "Rede Atacadão Nordeste",
+    text: "A Tempero Regina é uma das nossas marcas mais vendidas. A fidelidade do consumidor é impressionante. A gama de produtos atende desde o pequeno mercado até grandes redes varejistas.",
+    initials: "MF",
+    bgColor: "bg-yellow-500",
+  },
+  {
+    id: 3,
+    name: "João Pedro",
+    role: "Chef Executivo",
+    company: "Pousada do Sol",
+    text: "Uso o Tempero Completo Regina em praticamente todas as minhas receitas. O sabor é autêntico e a consistência do produto é perfeita. Meus hóspedes sempre perguntam qual é o segredo do tempero.",
+    initials: "JP",
+    bgColor: "bg-amber-600",
+  },
+  {
+    id: 4,
+    name: "Ana Beatriz",
+    role: "Empresária",
+    company: "Cantinho da Dona Ana",
+    text: "Comecei vendendo marmitas e hoje tenho um restaurante movimentado. O Tempero Regina foi essencial nessa trajetória. O custo-benefício é excelente e o sabor conquista todo mundo.",
+    initials: "AB",
+    bgColor: "bg-green-600",
+  },
+  {
+    id: 5,
+    name: "Roberto Lima",
+    role: "Distribuidor",
+    company: "Lima Distribuidora",
+    text: "Distribuir Tempero Regina é um orgulho. A logística é impecável, os prazos de entrega são respeitados e o suporte comercial é diferenciado. Uma parceria de verdade.",
+    initials: "RL",
+    bgColor: "bg-teal-600",
+  },
+  {
+    id: 6,
+    name: "Dona Raimunda",
+    role: "Cliente Fiel",
+    company: "Mossoró, RN",
+    text: "Cozinho com Regina desde que me conheço por gente. Meu pai usava, minha mãe usava e agora meus filhos usam. É tradição na nossa família. O Tempero Caseiro é o melhor do Brasil!",
+    initials: "DR",
+    bgColor: "bg-rose-500",
+  },
+];

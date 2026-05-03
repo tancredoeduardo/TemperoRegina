@@ -1,0 +1,111 @@
+export interface TimelineEvent {
+  year: number;
+  title: string;
+  description: string;
+  image?: string;
+}
+
+export const timelineData: TimelineEvent[] = [
+  {
+    year: 1967,
+    title: "Nasce a Tempero Regina",
+    description:
+      "A Indústria de Tempero Regina Ltda nasce em Mossoró, Rio Grande do Norte. Começou como um pequeno negócio de família, vendendo um único produto: o Tempero Caseiro Regina, que rapidamente conquistou o paladar dos mossoroenses.",
+    image:
+      "https://readdy.ai/api/search-image?query=A vintage style illustration of a small Brazilian family food business from 1967, a modest kitchen workshop preparing traditional seasonings, warm nostalgic atmosphere with wooden shelves filled with spice jars, retro Brazilian northeast aesthetic, soft warm lighting, nostalgic documentary photography style",
+  },
+  {
+    year: 1975,
+    title: "Expansão Local",
+    description:
+      "Com a aceitação crescente dos produtos Regina, a empresa expande suas vendas para toda a região de Mossoró e cidades vizinhas. As entregas eram feitas de bicicleta pelos bairros, levando sabor às casas dos moradores.",
+  },
+  {
+    year: 1982,
+    title: "Primeira Linha Completa",
+    description:
+      "Além do tradicional Tempero Caseiro, a empresa lança sua primeira linha completa de produtos, incluindo alho temperado, sal grosso e novos temperos em pó, atendendo à demanda crescente dos consumidores.",
+  },
+  {
+    year: 1990,
+    title: "Modernização da Fábrica",
+    description:
+      "Investimento em equipamentos modernos e ampliação da unidade fabril em Mossoró. A empresa passa a produzir em escala industrial mantendo a qualidade artesanal que a tornou conhecida.",
+    image:
+      "https://readdy.ai/api/search-image?query=A modern Brazilian food processing factory interior with stainless steel production lines, spice and seasoning manufacturing equipment, clean industrial environment with workers in white uniforms, professional food industry photography, bright lighting, organized production facility",
+  },
+  {
+    year: 1998,
+    title: "Conquista do Rio Grande do Norte",
+    description:
+      "A Tempero Regina torna-se líder de mercado no Rio Grande do Norte. Com uma frota de caminhões refrigerados, a empresa passa a distribuir seus produtos para todas as cidades do estado.",
+  },
+  {
+    year: 2005,
+    title: "Expansão para o Nordeste",
+    description:
+      "A marca cruza as fronteiras do RN e chega aos estados da Paraíba, Pernambuco e Ceará. A Tempero Regina começa a ser reconhecida como uma das maiores indústrias de temperos do Nordeste.",
+  },
+  {
+    year: 2012,
+    title: "Lançamento da Linha Gourmet",
+    description:
+      "Inovação na linha de produtos com o lançamento da linha Gourmet, trazendo sabores sofisticados como Ervas Finas, Bacon e Costela, elevando o patamar da marca no mercado premium.",
+    image:
+      "https://readdy.ai/api/search-image?query=Elegant gourmet seasoning bottles arranged on a dark marble surface with fresh herbs and spices around, premium food product photography, sophisticated branding with gold and red accents, moody professional lighting, luxury kitchen aesthetic, high-end food styling",
+  },
+  {
+    year: 2017,
+    title: "50 Anos de História",
+    description:
+      "Celebração das Bodas de Ouro da empresa. 50 anos levando sabor à mesa dos brasileiros. Evento comemorativo em Mossoró reuniu colaboradores, clientes e autoridades em uma grande festa.",
+  },
+  {
+    year: 2020,
+    title: "Nova Identidade Visual",
+    description:
+      "A marca passa por um processo de rebranding modernizando sua identidade visual enquanto mantém as raízes nordestinas. Novas embalagens, novo site e presença fortalecida nas redes sociais.",
+  },
+  {
+    year: 2024,
+    title: "Mais de 100 Produtos",
+    description:
+      "A linha de produtos Regina ultrapassa os 100 itens, incluindo temperos, molhos, extratos, vinagres, especiarias, alhos, maioneses e catchup. A frota de distribuição conta com 18 caminhões percorrendo o Nordeste e Norte do Brasil.",
+    image:
+      "https://readdy.ai/api/search-image?query=A colorful display of over 100 different seasoning and condiment products arranged in a Brazilian supermarket shelf, red and yellow branded bottles and jars, vibrant product photography, clean modern retail environment, professional commercial photography with bright lighting, organized product grid layout",
+  },
+];
+
+export const valores = [
+  {
+    icon: "ri-heart-line",
+    title: "Paixão pelo Sabor",
+    description:
+      "Cada produto é feito com amor e dedicação, buscando sempre o melhor sabor para nossos consumidores.",
+  },
+  {
+    icon: "ri-shield-check-line",
+    title: "Qualidade Garantida",
+    description:
+      "Processos rigorosos de controle de qualidade desde a seleção das matérias-primas até o produto final.",
+  },
+  {
+    icon: "ri-seedling-line",
+    title: "Compromisso com a Origem",
+    description:
+      "Valorizamos os produtores locais e as tradições culinárias do Nordeste brasileiro.",
+  },
+  {
+    icon: "ri-lightbulb-line",
+    title: "Inovação Constante",
+    description:
+      "Investimos em pesquisa e desenvolvimento para trazer sempre novidades ao mercado.",
+  },
+];
+
+export const stats = [
+  { number: "57+", label: "Anos de História" },
+  { number: "100+", label: "Produtos na Linha" },
+  { number: "18", label: "Caminhões na Frota" },
+  { number: "27", label: "Estados Atendidos" },
+];

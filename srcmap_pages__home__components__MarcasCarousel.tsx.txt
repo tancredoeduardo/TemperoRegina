@@ -1,0 +1,100 @@
+import { useRef, useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { marcasImages } from "@/mocks/home";
+import ScrollReveal from "@/components/base/ScrollReveal";
+
+export default function MarcasCarousel() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const checkScroll = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 0);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 2);
+  };
+
+  useEffect(() => {
+    checkScroll();
+    const el = scrollRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", checkScroll, { passive: true });
+    return () => el.removeEventListener("scroll", checkScroll);
+  }, []);
+
+  const scroll = (direction: "left" | "right") => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const amount = direction === "left" ? -300 : 300;
+    el.scrollBy({ left: amount, behavior: "smooth" });
+  };
+
+  return (
+    <section className="bg-white py-8 md:py-12 relative">
+      <div className="max-w-6xl mx-auto px-4 md:px-6">
+        <ScrollReveal>
+          <div className="text-center mb-6 md:mb-8">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <div className="w-1 h-5 bg-regina-red rounded-full" />
+              <span className="text-xs font-semibold text-regina-red uppercase tracking-wider">
+                Nossas Marcas
+              </span>
+            </div>
+            <h2 className="text-xl md:text-3xl font-bold text-gray-900 uppercase tracking-wide">
+              Nossas Marcas
+            </h2>
+          </div>
+        </ScrollReveal>
+
+        <div className="relative">
+          {/* Nav arrows (desktop) */}
+          <button
+            type="button"
+            onClick={() => scroll("left")}
+            className={`absolute left-0 md:-left-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-white shadow-md text-regina-red transition-all ${
+              canScrollLeft
+                ? "opacity-100 pointer-events-auto"
+                : "opacity-0 pointer-events-none"
+            }`}
+            aria-label="Anterior"
+          >
+            <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => scroll("right")}
+            className={`absolute right-0 md:-right-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-white shadow-md text-regina-red transition-all ${
+              canScrollRight
+                ? "opacity-100 pointer-events-auto"
+                : "opacity-0 pointer-events-none"
+            }`}
+            aria-label="Próximo"
+          >
+            <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
+          </button>
+
+          <div
+            ref={scrollRef}
+            className="flex gap-4 md:gap-6 overflow-x-auto scrollbar-hide py-2 px-1"
+            style={{ scrollSnapType: "x mandatory" }}
+          >
+            {marcasImages.map((marca) => (
+              <div
+                key={marca.id}
+                className="shrink-0 w-32 md:w-40 h-24 md:h-32 rounded-xl overflow-hidden bg-white flex items-center justify-center border border-gray-100 hover:border-regina-red/20 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer group"
+                style={{ scrollSnapAlign: "start" }}
+              >
+                <img
+                  src={marca.image}
+                  alt={marca.alt}
+                  className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-500"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

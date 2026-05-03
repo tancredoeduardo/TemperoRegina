@@ -1,0 +1,61 @@
+import type { RouteObject } from "react-router-dom";
+import NotFound from "../pages/NotFound";
+import Home from "../pages/home/page";
+import ProductDetail from "../pages/product/page";
+import Events from "../pages/events/page";
+import EventDetail from "../pages/event-detail/page";
+import About from "../pages/about/page";
+import RecipesPage from "../pages/recipes/page";
+import FAQ from "../pages/faq/page";
+import Catalog from "../pages/catalog/page";
+import Blog from "../pages/blog/page";
+import Contact from "../pages/contact/page";
+
+const routes: RouteObject[] = [
+  {
+    path: "/",
+    element: <Home />,
+  },
+  {
+    path: "/produto/:id",
+    element: <ProductDetail />,
+  },
+  {
+    path: "/eventos",
+    element: <Events />,
+  },
+  {
+    path: "/eventos/:id",
+    element: <EventDetail />,
+  },
+  {
+    path: "/quem-somos",
+    element: <About />,
+  },
+  {
+    path: "/receitas",
+    element: <RecipesPage />,
+  },
+  {
+    path: "/faq",
+    element: <FAQ />,
+  },
+  {
+    path: "/catalogo",
+    element: <Catalog />,
+  },
+  {
+    path: "/blog",
+    element: <Blog />,
+  },
+  {
+    path: "/contato",
+    element: <Contact />,
+  },
+  {
+    path: "*",
+    element: <NotFound />,
+  },
+];
+
+export default routes;

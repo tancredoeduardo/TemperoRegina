@@ -1,0 +1,204 @@
+import { useState, useRef } from "react";
+import { Download, Heart, ChevronRight, Sparkles } from "lucide-react";
+import { useWishlist } from "@/hooks/useWishlist";
+import ScrollReveal from "@/components/base/ScrollReveal";
+import { productCategories } from "@/mocks/products";
+import { motion } from "framer-motion";
+
+const destaqueCategorias = [
+  { id: "lancamentos", label: "Lançamentos" },
+  { id: "tradicional", label: "Linha Tradicional" },
+  { id: "gourmet", label: "Linha Gourmet" },
+  { id: "vinagres", label: "Linha Vinagres" },
+  { id: "alhos", label: "Alhos" },
+  { id: "tempero-po", label: "Tempero em Pó" },
+];
+
+function CategorySection({ categoryId, categoryTitle, maxItems = 5 }: { categoryId: string; categoryTitle: string; maxItems?: number }) {
+  const category = productCategories.find((c) => c.id === categoryId);
+  const [showAll, setShowAll] = useState(false);
+  const { addItem, removeItem, hasItem } = useWishlist();
+
+  if (!category) return null;
+
+  const display = showAll ? category.products : category.products.slice(0, maxItems);
+  const hasMore = category.products.length > maxItems;
+
+  return (
+    <div className="mb-8 md:mb-10">
+      <div className="flex items-center justify-between mb-4 md:mb-5">
+        <div className="flex items-center gap-2">
+          <div className="w-1 h-5 bg-regina-red rounded-full" />
+          <h3 className="text-sm md:text-base font-bold text-gray-900 uppercase tracking-wide">
+            {categoryTitle}
+          </h3>
+        </div>
+        <div className="flex items-center gap-2">
+          {hasMore && (
+            <button
+              type="button"
+              onClick={() => setShowAll(!showAll)}
+              className="text-xs font-medium text-gray-500 hover:text-regina-red transition-colors whitespace-nowrap"
+            >
+              {showAll ? "Ver menos" : "Ver todos"}
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => window.REACT_APP_NAVIGATE?.("/catalogo")}
+            className="text-xs font-medium text-regina-red hover:text-regina-red-dark transition-colors whitespace-nowrap flex items-center gap-0.5 group"
+          >
+            Catálogo
+            <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+          </button>
+        </div>
+      </div>
+      <motion.div
+        className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-5 gap-2 md:gap-3"
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: {},
+          visible: { transition: { staggerChildren: 0.04 } },
+        }}
+      >
+        {display.map((product) => {
+          const inWishlist = hasItem(product.id);
+          return (
+            <motion.div
+              key={product.id}
+              variants={{
+                hidden: { opacity: 0, y: 12, scale: 0.97 },
+                visible: { opacity: 1, y: 0, scale: 1 },
+              }}
+              transition={{ duration: 0.35 }}
+            >
+              <div
+                className="group bg-white rounded-lg border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 hover:border-regina-red/15"
+              >
+                <div
+                  className="relative aspect-square bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-2 cursor-pointer"
+                  onClick={() => window.REACT_APP_NAVIGATE?.(`/produto/${product.id}`)}
+                >
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (inWishlist) {
+                        removeItem(product.id);
+                      } else {
+                        addItem({
+                          id: product.id,
+                          name: product.name,
+                          image: product.image,
+                          category: category.title,
+                        });
+                      }
+                    }}
+                    className={`absolute top-1.5 right-1.5 w-6 h-6 flex items-center justify-center rounded-full transition-all duration-200 ${
+                      inWishlist
+                        ? "bg-regina-red text-white"
+                        : "bg-white/70 text-gray-400 hover:bg-regina-red hover:text-white opacity-0 group-hover:opacity-100"
+                    }`}
+                    aria-label={inWishlist ? "Remover da lista" : "Adicionar à lista"}
+                  >
+                    <Heart className={`w-3 h-3 ${inWishlist ? "fill-current" : ""}`} />
+                  </button>
+                </div>
+                <div className="p-2 md:p-3">
+                  <h4
+                    className="text-[11px] md:text-xs text-gray-800 leading-tight line-clamp-2 min-h-[2.2em] group-hover:text-regina-red transition-colors duration-200 cursor-pointer"
+                    onClick={() => window.REACT_APP_NAVIGATE?.(`/produto/${product.id}`)}
+                  >
+                    {product.name}
+                  </h4>
+                  <a
+                    href={product.downloadUrl}
+                    download
+                    className="inline-flex items-center gap-1 text-[10px] md:text-xs text-regina-red hover:text-regina-red-dark font-medium transition-colors mt-1"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Download className="w-2.5 h-2.5" />
+                    <span>Download</span>
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+          );
+        })}
+      </motion.div>
+    </div>
+  );
+}
+
+export default function Produtos() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  return (
+    <section
+      id="nossos-produtos"
+      ref={sectionRef}
+      className="relative bg-regina-cream py-12 md:py-20 overflow-hidden"
+    >
+      {/* Subtle decorative */}
+      <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-regina-red/[0.03] -translate-y-1/2 translate-x-1/3" />
+      <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full bg-regina-yellow/[0.05] translate-y-1/3 -translate-x-1/4" />
+
+      <div className="relative max-w-6xl mx-auto px-4 md:px-6">
+        <ScrollReveal>
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-8 md:mb-12">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <Sparkles className="w-4 h-4 text-regina-red" />
+                <span className="text-xs font-semibold text-regina-red uppercase tracking-wider">
+                  Nossos Produtos
+                </span>
+              </div>
+              <h2 className="text-xl md:text-3xl font-bold text-gray-900 uppercase tracking-wide">
+                Explore Nossas Linhas
+              </h2>
+              <p className="text-xs md:text-sm text-gray-500 mt-2 max-w-md">
+                Mais de 100 produtos desenvolvidos com qualidade e tradição desde 1967.
+              </p>
+            </div>
+            <a
+              href="./download/catalogo-regina.pdf"
+              download
+              className="mt-4 md:mt-0 group inline-flex items-center gap-2 bg-regina-red text-white text-xs font-semibold px-4 py-2 rounded-md hover:bg-regina-red-dark transition-all duration-300 whitespace-nowrap hover:shadow-md"
+            >
+              <Download className="w-3.5 h-3.5" />
+              CATÁLOGO COMPLETO
+            </a>
+          </div>
+        </ScrollReveal>
+
+        {destaqueCategorias.map((cat, idx) => (
+          <ScrollReveal key={cat.id} delay={idx * 0.05}>
+            <CategorySection categoryId={cat.id} categoryTitle={cat.label} maxItems={5} />
+          </ScrollReveal>
+        ))}
+
+        {/* CTA final */}
+        <ScrollReveal>
+          <div className="mt-4 text-center">
+            <motion.button
+              type="button"
+              onClick={() => window.REACT_APP_NAVIGATE?.("/catalogo")}
+              className="inline-flex items-center gap-2 border-2 border-regina-red text-regina-red text-sm font-semibold px-6 py-2.5 rounded-md hover:bg-regina-red hover:text-white transition-all duration-300 whitespace-nowrap group"
+              whileHover={{ y: -3 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              Ver Catálogo Completo
+              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </motion.button>
+          </div>
+        </ScrollReveal>
+      </div>
+    </section>
+  );
+}

@@ -1,0 +1,195 @@
+export interface Product {
+  id: string;
+  name: string;
+  image: string;
+  downloadUrl: string;
+  description?: string;
+  category?: string;
+}
+
+export interface Category {
+  id: string;
+  title: string;
+  products: Product[];
+}
+
+export const productCategories: Category[] = [
+  {
+    id: "lancamentos",
+    title: "Lançamentos",
+    products: [
+      { id: "p1", name: "Tempero Completo com Amaciante de Carne Regina", image: "https://temperoregina.com.br/adm/midia/image/a2412261540460.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2412261540460.png" },
+      { id: "p2", name: "Tempero para Frango Regina", image: "https://temperoregina.com.br/adm/midia/image/a2412261540461.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2412261540461.png" },
+      { id: "p3", name: "Molho Shoyu Regina 5l", image: "https://temperoregina.com.br/adm/midia/image/a2502051647580.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2502051647580.png" },
+      { id: "p4", name: "Vinagre de álcool Regina 5l", image: "https://temperoregina.com.br/adm/midia/image/a2502051647280.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2502051647280.png" },
+      { id: "p5", name: "Canela em Pó", image: "https://temperoregina.com.br/adm/midia/image/a2502051644300.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2502051644300.png" },
+      { id: "p6", name: "Maionese Tradicional Regina", image: "https://temperoregina.com.br/adm/midia/image/a2502051641280.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2502051641280.png" },
+      { id: "p7", name: "Catchup Premium Regina", image: "https://temperoregina.com.br/adm/midia/image/a2502051640450.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2502051640450.png" },
+    ],
+  },
+  {
+    id: "vinagres",
+    title: "Linha Vinagres",
+    products: [
+      { id: "v1", name: "Vinagre de álcool Regina 5l", image: "https://temperoregina.com.br/adm/midia/image/a2502051647280.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2502051647280.png" },
+      { id: "v2", name: "Vinagre de Álcool aromatizado de Alho 500ml", image: "https://temperoregina.com.br/adm/midia/image/a2109291115350.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109291115350.png" },
+      { id: "v3", name: "Vinagre de Álcool aromatizado de Limão 500ml", image: "https://temperoregina.com.br/adm/midia/image/a2109291113460.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109291113460.png" },
+      { id: "v4", name: "Vinagre aromatizado de Maçã 500ml", image: "https://temperoregina.com.br/adm/midia/image/a2109291112050.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109291112050.png" },
+      { id: "v5", name: "Vinagre de Álcool 300ml", image: "https://temperoregina.com.br/adm/midia/image/a2109271419360.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109271419360.png" },
+      { id: "v6", name: "Vinagre de Álcool 500ml", image: "https://temperoregina.com.br/adm/midia/image/a2109271416590.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109271416590.png" },
+    ],
+  },
+  {
+    id: "tempero-po",
+    title: "Linha Tempero em Pó",
+    products: [
+      { id: "tp1", name: "Tempero em pó Massas", image: "https://temperoregina.com.br/adm/midia/image/a2502051650090.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2502051650090.png" },
+      { id: "tp2", name: "Tempero em Pó - Nordeste", image: "https://temperoregina.com.br/adm/midia/image/a2109262203460.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109262203460.png" },
+      { id: "tp3", name: "Tempero em Pó - Arroz", image: "https://temperoregina.com.br/adm/midia/image/a2109262205240.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109262205240.png" },
+      { id: "tp4", name: "Tempero em Pó - Aves", image: "https://temperoregina.com.br/adm/midia/image/a2109262207180.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109262207180.png" },
+      { id: "tp5", name: "Tempero em Pó - Feijão", image: "https://temperoregina.com.br/adm/midia/image/a2109262207550.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109262207550.png" },
+      { id: "tp6", name: "Tempero em Pó - Carne", image: "https://temperoregina.com.br/adm/midia/image/a2109262208540.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109262208540.png" },
+      { id: "tp7", name: "Tempero em Pó - Galinha Caipira", image: "https://temperoregina.com.br/adm/midia/image/a2109262209460.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109262209460.png" },
+      { id: "tp8", name: "Tempero em Pó - Legumes", image: "https://temperoregina.com.br/adm/midia/image/a2109262159560.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109262159560.png" },
+    ],
+  },
+  {
+    id: "especiarias-potes",
+    title: "Especiarias Potes",
+    products: [
+      { id: "ep1", name: "Gengibre em pó - 30g", image: "https://temperoregina.com.br/adm/midia/image/a25020516312819.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/25020516312819.jpg" },
+      { id: "ep2", name: "Erva Doce - 20g", image: "https://temperoregina.com.br/adm/midia/image/a25020516312818.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/25020516312818.jpg" },
+      { id: "ep3", name: "Cravo de Índia - 20g", image: "https://temperoregina.com.br/adm/midia/image/a25020516312817.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/25020516312817.jpg" },
+      { id: "ep4", name: "Canela em pó - 40g", image: "https://temperoregina.com.br/adm/midia/image/a25020516312816.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/25020516312816.jpg" },
+      { id: "ep5", name: "Pimenta do Reino em Grãos - 40g", image: "https://temperoregina.com.br/adm/midia/image/a25020516312815.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/25020516312815.jpg" },
+      { id: "ep6", name: "Pimenta Calabresa - 20g", image: "https://temperoregina.com.br/adm/midia/image/a25020516312814.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/25020516312814.jpg" },
+    ],
+  },
+  {
+    id: "alhos",
+    title: "Alhos",
+    products: [
+      { id: "a1", name: "Alho picado 200g", image: "https://temperoregina.com.br/adm/midia/image/a2412261725210.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2412261725210.png" },
+      { id: "a2", name: "Alho picado 450g", image: "https://temperoregina.com.br/adm/midia/image/a2412261714032.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2412261714032.png" },
+      { id: "a3", name: "Alho picado 1kg", image: "https://temperoregina.com.br/adm/midia/image/a2412261714030.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2412261714030.png" },
+      { id: "a4", name: "Alho picado 2kg", image: "https://temperoregina.com.br/adm/midia/image/a2412261714031.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2412261714031.png" },
+      { id: "a5", name: "Pasta de alho 200g", image: "https://temperoregina.com.br/adm/midia/image/a2412261725211.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2412261725211.png" },
+      { id: "a6", name: "Pasta de alho 450g", image: "https://temperoregina.com.br/adm/midia/image/a2412261714035.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2412261714035.png" },
+      { id: "a7", name: "Pasta de alho 1kg", image: "https://temperoregina.com.br/adm/midia/image/a2412261714033.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2412261714033.png" },
+      { id: "a8", name: "Pasta de Alho 2kg", image: "https://temperoregina.com.br/adm/midia/image/a2412261714034.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2412261714034.png" },
+    ],
+  },
+  {
+    id: "tradicional",
+    title: "Linha Tradicional",
+    products: [
+      { id: "lt1", name: "Tempero Completo com Amaciante de Carne 500ml", image: "https://temperoregina.com.br/adm/midia/image/a2412261540460.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2412261540460.png" },
+      { id: "lt2", name: "Tempero para Frango 500ml", image: "https://temperoregina.com.br/adm/midia/image/a2412261540461.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2412261540461.png" },
+      { id: "lt3", name: "Tempero Caseiro Sem Pimenta 500ml", image: "https://temperoregina.com.br/adm/midia/image/a2109271636410.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109271636410.png" },
+      { id: "lt4", name: "Tempero Condimentado 500ml", image: "https://temperoregina.com.br/adm/midia/image/a2412261547170.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2412261547170.png" },
+      { id: "lt5", name: "Tempero Especial 500ml", image: "https://temperoregina.com.br/adm/midia/image/a2109262217390.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109262217390.png" },
+      { id: "lt6", name: "Tempero Caseiro Original 300ml", image: "https://temperoregina.com.br/adm/midia/image/a2109262215250.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109262215250.png" },
+      { id: "lt7", name: "Tempero Caseiro Original 500ml", image: "https://temperoregina.com.br/adm/midia/image/a2109262211240.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109262211240.png" },
+    ],
+  },
+  {
+    id: "especiarias",
+    title: "Especiarias",
+    products: [
+      { id: "e1", name: "Canela em pó 35g", image: "https://temperoregina.com.br/adm/midia/image/a2412261449470.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2412261449470.png" },
+      { id: "e2", name: "Salsa desidratada 22g", image: "https://temperoregina.com.br/adm/midia/image/a2412261448340.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2412261448340.png" },
+      { id: "e3", name: "Pimenta do reino em pó 75g", image: "https://temperoregina.com.br/adm/midia/image/a2412261447300.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2412261447300.png" },
+      { id: "e4", name: "Cravo do Índia 42g", image: "https://temperoregina.com.br/adm/midia/image/a2412261444330.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2412261444330.png" },
+      { id: "e5", name: "Cominho em pó 60g", image: "https://temperoregina.com.br/adm/midia/image/a2412261443260.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2412261443260.png" },
+    ],
+  },
+  {
+    id: "sal-grosso",
+    title: "Sal Grosso",
+    products: [
+      { id: "sg1", name: "Sal Grosso com Alho", image: "https://temperoregina.com.br/adm/midia/image/a2109302222280.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109302222280.png" },
+      { id: "sg2", name: "Sal Grosso Temperado para Churrasco", image: "https://temperoregina.com.br/adm/midia/image/a2109302220440.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109302220440.png" },
+      { id: "sg3", name: "Sal Grosso Premium", image: "https://temperoregina.com.br/adm/midia/image/a2109302217570.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109302217570.png" },
+    ],
+  },
+  {
+    id: "tempero-completo",
+    title: "Tempero Completo",
+    products: [
+      { id: "tc1", name: "Tempero Completo Sem Pimenta", image: "https://temperoregina.com.br/adm/midia/image/a2109302216320.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109302216320.png" },
+      { id: "tc2", name: "Tempero Completo", image: "https://temperoregina.com.br/adm/midia/image/a2109302215380.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109302215380.png" },
+      { id: "tc3", name: "Tempero Alho e Sal", image: "https://temperoregina.com.br/adm/midia/image/a2109302214460.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109302214460.png" },
+    ],
+  },
+  {
+    id: "folha-verde",
+    title: "Linha Folha Verde",
+    products: [
+      { id: "fv1", name: "Tempero Caseiro Folha Verde 500ml", image: "https://temperoregina.com.br/adm/midia/image/a2109302206310.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109302206310.png" },
+      { id: "fv2", name: "Tempero Especial Folha Verde 500ml", image: "https://temperoregina.com.br/adm/midia/image/a2109302203500.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109302203500.png" },
+      { id: "fv3", name: "Extrato de Alho Folha Verde 500ml", image: "https://temperoregina.com.br/adm/midia/image/a2109302157560.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109302157560.png" },
+      { id: "fv4", name: "Vinagre de Álcool Folha Verde 500ml", image: "https://temperoregina.com.br/adm/midia/image/a2109301848070.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109301848070.png" },
+    ],
+  },
+  {
+    id: "gourmet",
+    title: "Linha Gourmet",
+    products: [
+      { id: "g1", name: "Tempero Gourmet de Frango 500ml", image: "https://temperoregina.com.br/adm/midia/image/a2109301616400.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109301616400.png" },
+      { id: "g2", name: "Tempero Gourmet de Ervas Finas 500ml", image: "https://temperoregina.com.br/adm/midia/image/a2109301615000.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109301615000.png" },
+      { id: "g3", name: "Tempero Gourmet de Carne 500ml", image: "https://temperoregina.com.br/adm/midia/image/a2109291602110.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109291602110.png" },
+      { id: "g4", name: "Tempero Gourmet de Costela 500ml", image: "https://temperoregina.com.br/adm/midia/image/a2109291603200.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109291603200.png" },
+      { id: "g5", name: "Tempero Gourmet de Bacon 500ml", image: "https://temperoregina.com.br/adm/midia/image/a2109291557060.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109291557060.png" },
+    ],
+  },
+  {
+    id: "gina",
+    title: "Gina",
+    products: [
+      { id: "gi1", name: "Tempero Especial Gina 300ml", image: "https://temperoregina.com.br/adm/midia/image/a2109301132560.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109301132560.png" },
+      { id: "gi2", name: "Tempero Especial Gina 500ml", image: "https://temperoregina.com.br/adm/midia/image/a2109301132560.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109301132560.png" },
+    ],
+  },
+  {
+    id: "molhos",
+    title: "Molhos",
+    products: [
+      { id: "m1", name: "Molho de Pimenta ao Leite 150ml", image: "https://temperoregina.com.br/adm/midia/image/a2412261606420.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2412261606420.png" },
+      { id: "m2", name: "Molho de Pimenta Extra Forte 150ml", image: "https://temperoregina.com.br/adm/midia/image/a2109291533280.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109291533280.png" },
+      { id: "m3", name: "Molho de Pimenta 150ml", image: "https://temperoregina.com.br/adm/midia/image/a2109291534490.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109291534490.png" },
+      { id: "m4", name: "Molho Shoyu 150ml", image: "https://temperoregina.com.br/adm/midia/image/a2109291531260.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109291531260.png" },
+      { id: "m5", name: "Molho Shoyu 500ml", image: "https://temperoregina.com.br/adm/midia/image/a2109291528230.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109291528230.png" },
+      { id: "m6", name: "Molho de Álho 150ml", image: "https://temperoregina.com.br/adm/midia/image/a2109291119350.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109291119350.png" },
+      { id: "m7", name: "Molho Inglês 150ml", image: "https://temperoregina.com.br/adm/midia/image/a2109291118100.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109291118100.png" },
+    ],
+  },
+  {
+    id: "extratos",
+    title: "Linha Extratos",
+    products: [
+      { id: "ex1", name: "Refoga 500ml", image: "https://temperoregina.com.br/adm/midia/image/a2109262236410.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109262236410.png" },
+      { id: "ex2", name: "Extrato de Alho 300ml", image: "https://temperoregina.com.br/adm/midia/image/a2109262233490.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109262233490.png" },
+      { id: "ex3", name: "Extrato de Alho 500ml", image: "https://temperoregina.com.br/adm/midia/image/a2109262230190.webp", downloadUrl: "https://temperoregina.com.br/adm/midia/image/2109262230190.png" },
+    ],
+  },
+];
+
+export function findProductById(id: string): { product: Product; category: Category } | null {
+  for (const category of productCategories) {
+    const product = category.products.find((p) => p.id === id);
+    if (product) {
+      return { product, category };
+    }
+  }
+  return null;
+}
+
+export function getAllProducts(): (Product & { categoryId: string; categoryTitle: string })[] {
+  const all: (Product & { categoryId: string; categoryTitle: string })[] = [];
+  for (const category of productCategories) {
+    for (const product of category.products) {
+      all.push({ ...product, categoryId: category.id, categoryTitle: category.title });
+    }
+  }
+  return all;
+}

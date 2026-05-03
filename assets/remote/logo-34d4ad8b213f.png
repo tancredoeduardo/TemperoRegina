@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link rel="icon" href="https://temperoregina.com.br/lib/img/logo-icon.png">
+<title>Tempero Regina</title>
+<link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.0.1/css/unicons.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+<link rel="stylesheet" href="https://temperoregina.com.br/lib/css/main.css?v6">
+<link rel="stylesheet" href="https://temperoregina.com.br/lib/css/revendedores.css?v6">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+
+</head>
+
+<body>
+	<section id="flow">
+		<main id="main">
+	<div id="header">
+	<div id="main-menu" class="container">
+		<div class="row">
+			<div class="col-lg-3 text-center" id="logo" style="max-height: 90px;">
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Alterna navegação">
+						<i class="uil uil-bars"></i>
+					</button>
+								<a href="https://temperoregina.com.br" style="position: relative; top: -110px;"><img src="https://temperoregina.com.br/lib/img/logo-footer.png" class="img-fluid main-logo"></a>				
+							</div>
+			<div class="col-lg-9">
+				<nav class="navbar navbar-expand-md navbar-light">
+					<div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+						<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+							<li class="nav-item active"><a class="nav-link" href="https://temperoregina.com.br">Home</a></li>
+							<li class="nav-item"><a class="nav-link" href="https://temperoregina.com.br/#quemsomos">Empresa</a></li>
+							<li class="nav-item"><a class="nav-link" href="https://temperoregina.com.br/produtos">Produtos</a></li>
+							<li class="nav-item"><a class="nav-link" href="https://temperoregina.com.br/#receitas">Receita</a></li>
+							<!-- <li class="nav-item"><a class="nav-link" href="#parceiros">Parceiros</a></li> -->
+							<li class="nav-item"><a class="nav-link" href="https://temperoregina.com.br/#clientes">clientes</a></li>
+							<li class="nav-item"><a class="nav-link" href="https://temperoregina.com.br/#faleconosco">Contato</a></li>
+							<li class="nav-item"><a class="nav-link" href="https://temperoregina.com.br/eventos">Eventos</a></li>
+						</ul>
+						<form class="form-inline my-2 my-lg-0">
+							<ul class="list-inline share">
+																<li class="list-inline-item"><a href="https://instagram.com/temperoregina?utm_medium=copy_link" target="_blank"><i class="uil uil-instagram"></i></a></li>
+																<li class="list-inline-item"><a href="https://www.facebook.com/TemperoRegina/" target="_blank"><i class="uil uil-facebook"></i></a></li>
+																<li class="list-inline-item"><a href="https://www.youtube.com/user/TemperoRegina" target="_blank"><i class="uil uil-youtube"></i></a></li>
+															</ul>
+						</form>
+					</div>
+				</nav>
+							</div>
+		</div>
+	</div>
+</div>
+<script>
+	$(".navbar-toggler").click(function(){
+		console.log('obj');
+		$(".navbar-collapse").fadeToggle()
+	});
+</script></main>
+	<!-- Modal -->
+<div class="modal fade" id="trabalheconosco" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<form class="modal-content" onsubmit="mySubmit(this,'trabalhe');return false">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Trabalhe Conosco</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p>Gostaria de fazer parte da nossa equipe? Então não deixe de nos enviar o seu currículo, basta preencher o formulário de identificação, anexar o seu currículo em formato DOC ou PDF e clicar em enviar.</p>
+				<label class="form-group">
+					Nome
+					<input type="text" class="form-control" placeholder="Nome" name="nome">
+				</label>
+				<br>
+				<label class="form-group">
+					Email
+					<input type="text" class="form-control" placeholder="Email" name="email">
+				</label>
+				<label class="form-group">
+					Telefone
+					<input type="text" class="form-control" placeholder="Telefone" name="telefone">
+				</label>
+				<div class="custom-file">
+					<label class="custom-file-label" for="customFile">Curriculo</label><br>
+					<input type="file" class="custom-file-input" id="customFile" name="arquivo">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-primary">Enviar</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div class="modal fade" id="sejaumrevendedor" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<form class="modal-content" action="">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Seja um revendedor</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p>Você é lojista e deseja cadastrar sua revenda? Preencha os dados abaixo e aguarde nosso contato.</p>
+				<p>Dados da Empresa</p>
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Razão Social" name="razao">
+				</div>
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Nome Fantasia" name="fantazia">
+				</div>
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="CNPJ" name="cnpj">
+				</div>
+				<p>Contatos</p>
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Nome" name="nome">
+				</div>
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="E-mail" name="email">
+				</div>
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Telefone" name="telefone">
+				</div>
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Mensagem" name="mensagem">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-primary">Enviar</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div class="modal fade" id="sejanossoparceiro" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<form class="modal-content" action="">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Seja um revendedor</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p>Você que deseja ser nosso parceiro? Preencha os dados abaixo e aguarde nosso contato.</p>
+				<p>Dados da Empresa</p>
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Razão Social" name="razao">
+				</div>
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Nome Fantasia" name="fantazia">
+				</div>
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="CNPJ" name="cnpj">
+				</div>
+				<p>Contatos</p>
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Nome" name="nome">
+				</div>
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="E-mail" name="email">
+				</div>
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Telefone" name="telefone">
+				</div>
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Mensagem" name="mensagem">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-primary">Enviar</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<footer>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4 text-center">
+				<a href="">
+					<img src="https://temperoregina.com.br/lib/img/logo-footer.png" alt="" class="logo">
+				</a>
+			</div>
+			<div class="col-md-4 endereco">
+				<div class="texto">
+					<h3 class="title">Tempero Regina</h3>
+					<div class="text">
+						<p>Indústria de Tempero Regina Ltda</p>
+						<p>sac@temperoregina.com.br</p>
+						<p>comercial@temperoregina.com.br</p>
+						<p>(84) 3316-1600</p>
+						<p>Av. Alberto Maranhão, 100 - Belo Horizonte, <br>Mossoró - RN, Cep: 59600-485</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-4 container-menu">
+				<h3 class="title">INSTITUCIONAL</h3>
+				<ul class="list-unstyled">
+					<li><a href="#quemsomos">Quem somos</a></li>
+					<li><a href="#nossos-produtos">Produtos</a></li>
+					<li><a href="#faleconosco">Contatos</a></li>
+					<li><a href="" data-bs-toggle="modal" data-bs-target="#trabalheconosco">Trabalhe Conosco</a></li>
+					<li><a href="" data-bs-toggle="modal" data-bs-target="#sejanossoparceiro">Seja nosso parceiro</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="text-center mt-3">
+			<a href="https://geekweb.com.br" target="_blank">
+				<img src="https://temperoregina.com.br/lib/img/logo-buzz.png" alt="">
+			</a>
+		</div>
+	</div>
+</footer>
+<script>
+$("#trabalheconosco").on("click",".close",function(){
+	$('#trabalheconosco').modal('hide')
+});
+$("#sejaumrevendedor").on("click",".close",function(){
+	$('#sejaumrevendedor').modal('hide')
+});
+$("#sejanossoparceiro").on("click",".close",function(){
+	$('#sejanossoparceiro').modal('hide')
+});
+</script></section>
+<!--Start of Tawk.to Script-->
+<!-- <script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/6756f56149e2fd8dfef56605/1ielqt1fg';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script> -->
+<!--End of Tawk.to Script-->
+<script src="https://temperoregina.com.br/lib/js/main.js"></script>
+</body>
+</html>

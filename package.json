@@ -1,0 +1,18 @@
+{
+  "name": "tempero-regina-clone",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Clone estatico do site Tempero Regina",
+  "scripts": {
+    "build": "node scripts/build-check.mjs",
+    "check:supabase": "node scripts/check-supabase.mjs",
+    "start": "node server.js",
+    "test:visual": "node scripts/visual-test.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.59.1"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.105.1"
+  }
+}

@@ -1,0 +1,31 @@
+import Navbar from "@/components/feature/Navbar";
+import Footer from "@/components/feature/Footer";
+import HeroSlider from "./components/HeroSlider";
+import QuemSomos from "./components/QuemSomos";
+import MarcasCarousel from "./components/MarcasCarousel";
+import Vendedores from "./components/Vendedores";
+import Produtos from "./components/Produtos";
+import Receitas from "./components/Receitas";
+import Depoimentos from "./components/Depoimentos";
+import Newsletter from "./components/Newsletter";
+import Clientes from "./components/Clientes";
+import FaleConosco from "./components/FaleConosco";
+
+export default function Home() {
+  return (
+    <div className="min-h-screen">
+      <Navbar />
+      <HeroSlider />
+      <QuemSomos />
+      <MarcasCarousel />
+      <Vendedores />
+      <Produtos />
+      <Receitas />
+      <Depoimentos />
+      <Newsletter />
+      <Clientes />
+      <FaleConosco />
+      <Footer />
+    </div>
+  );
+}

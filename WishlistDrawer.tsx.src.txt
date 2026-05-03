@@ -1,0 +1,41 @@
+import { useEffect, useState } from "react";
+import { ArrowUp } from "lucide-react";
+
+const SHOW_BUTTON_AFTER = 480;
+
+export default function WishlistDrawer() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const syncVisibility = () => {
+      setVisible(window.scrollY > SHOW_BUTTON_AFTER);
+    };
+
+    syncVisibility();
+    window.addEventListener("scroll", syncVisibility, { passive: true });
+    return () => window.removeEventListener("scroll", syncVisibility);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={scrollToTop}
+      className={`fixed bottom-5 right-5 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-regina-red text-white shadow-lg transition-all duration-300 md:h-14 md:w-14 ${
+        visible
+          ? "translate-y-0 opacity-100 hover:-translate-y-1 hover:bg-regina-red-dark hover:shadow-xl"
+          : "pointer-events-none translate-y-4 opacity-0"
+      }`}
+      aria-label="Voltar ao topo da página"
+      title="Voltar ao topo"
+    >
+      <ArrowUp className="h-5 w-5 md:h-6 md:w-6" />
+    </button>
+  );
+}

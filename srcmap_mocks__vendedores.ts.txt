@@ -1,0 +1,277 @@
+export interface Vendedor {
+  nome: string;
+  email: string;
+  telefone: string;
+  empresa: string;
+}
+
+export interface EstadoInfo {
+  sigla: string;
+  nome: string;
+  regiao: string;
+  vendedores: Vendedor[];
+}
+
+export const estadosData: EstadoInfo[] = [
+  {
+    sigla: "RN",
+    nome: "Rio Grande do Norte",
+    regiao: "Nordeste",
+    vendedores: [
+      { nome: "João Carlos Silva", email: "joao.silva@reginarn.com.br", telefone: "(84) 99912-3456", empresa: "Regina Distribuição Natal" },
+      { nome: "Maria Fernanda Lopes", email: "fernanda.lopes@reginarn.com.br", telefone: "(84) 99876-5432", empresa: "Lopes & Cia Distribuidora" },
+      { nome: "Antônio Pereira", email: "antonio.pereira@reginarn.com.br", telefone: "(84) 99765-4321", empresa: "Norte Temperos Atacado" },
+    ],
+  },
+  {
+    sigla: "CE",
+    nome: "Ceará",
+    regiao: "Nordeste",
+    vendedores: [
+      { nome: "Roberto Santos", email: "roberto.santos@reginace.com.br", telefone: "(85) 99911-2233", empresa: "Fortaleza Distribuidora" },
+      { nome: "Ana Beatriz Costa", email: "ana.costa@reginace.com.br", telefone: "(85) 99822-3344", empresa: "Costa & Filhos Comercial" },
+      { nome: "Francisco Oliveira", email: "francisco.oliveira@reginace.com.br", telefone: "(85) 99733-4455", empresa: "Ceará Temperos Ltda" },
+      { nome: "Juliana Martins", email: "juliana.martins@reginace.com.br", telefone: "(85) 99644-5566", empresa: "Nordeste Sabores" },
+    ],
+  },
+  {
+    sigla: "PB",
+    nome: "Paraíba",
+    regiao: "Nordeste",
+    vendedores: [
+      { nome: "Carlos Eduardo Lima", email: "carlos.lima@reginapb.com.br", telefone: "(83) 99955-6677", empresa: "Lima Distribuição João Pessoa" },
+      { nome: "Patrícia Souza", email: "patricia.souza@reginapb.com.br", telefone: "(83) 99866-7788", empresa: "Paraíba Temperos Atacado" },
+    ],
+  },
+  {
+    sigla: "PE",
+    nome: "Pernambuco",
+    regiao: "Nordeste",
+    vendedores: [
+      { nome: "Miguel Andrade", email: "miguel.andrade@reginape.com.br", telefone: "(81) 99977-8899", empresa: "Recife Distribuidora" },
+      { nome: "Laura Ribeiro", email: "laura.ribeiro@reginape.com.br", telefone: "(81) 99888-9900", empresa: "Pernambuco Sabores" },
+      { nome: "Paulo Henrique Dias", email: "paulo.dias@reginape.com.br", telefone: "(81) 99799-0011", empresa: "Dias & Cia Comercial" },
+      { nome: "Camila Torres", email: "camila.torres@reginape.com.br", telefone: "(81) 99600-1122", empresa: "Nordeste Premium" },
+      { nome: "Ricardo Mendes", email: "ricardo.mendes@reginape.com.br", telefone: "(81) 99511-2233", empresa: "Mendes Distribuição" },
+    ],
+  },
+  {
+    sigla: "AL",
+    nome: "Alagoas",
+    regiao: "Nordeste",
+    vendedores: [
+      { nome: "Bruno Ferreira", email: "bruno.ferreira@reginaal.com.br", telefone: "(82) 99922-3344", empresa: "Alagoas Temperos" },
+      { nome: "Fernanda Almeida", email: "fernanda.almeida@reginaal.com.br", telefone: "(82) 99833-4455", empresa: "Maceió Distribuidora" },
+    ],
+  },
+  {
+    sigla: "SE",
+    nome: "Sergipe",
+    regiao: "Nordeste",
+    vendedores: [
+      { nome: "Diego Nascimento", email: "diego.nascimento@reginase.com.br", telefone: "(79) 99944-5566", empresa: "Sergipe Sabores" },
+    ],
+  },
+  {
+    sigla: "BA",
+    nome: "Bahia",
+    regiao: "Nordeste",
+    vendedores: [
+      { nome: "Felipe Barreto", email: "felipe.barreto@reginaba.com.br", telefone: "(71) 99955-6677", empresa: "Barreto Distribuição Salvador" },
+      { nome: "Isabela Correia", email: "isabela.correia@reginaba.com.br", telefone: "(71) 99866-7788", empresa: "Bahia Premium Temperos" },
+      { nome: "Lucas Araújo", email: "lucas.araujo@reginaba.com.br", telefone: "(71) 99777-8899", empresa: "Salvador Atacadista" },
+      { nome: "Mariana Castro", email: "mariana.castro@reginaba.com.br", telefone: "(71) 99688-9900", empresa: "Castro & Cia Comercial" },
+      { nome: "Thiago Rocha", email: "thiago.rocha@reginaba.com.br", telefone: "(71) 99599-0011", empresa: "Norte da Bahia Distribuidora" },
+      { nome: "Vanessa Pinto", email: "vanessa.pinto@reginaba.com.br", telefone: "(71) 99500-1122", empresa: "Bahia Sabores Ltda" },
+    ],
+  },
+  {
+    sigla: "PI",
+    nome: "Piauí",
+    regiao: "Nordeste",
+    vendedores: [
+      { nome: "André Carvalho", email: "andre.carvalho@reginapi.com.br", telefone: "(86) 99911-2233", empresa: "Piauí Distribuidora" },
+      { nome: "Renata Melo", email: "renata.melo@reginapi.com.br", telefone: "(86) 99822-3344", empresa: "Melo Comercial Teresina" },
+    ],
+  },
+  {
+    sigla: "MA",
+    nome: "Maranhão",
+    regiao: "Nordeste",
+    vendedores: [
+      { nome: "Gustavo Moreira", email: "gustavo.moreira@reginama.com.br", telefone: "(98) 99933-4455", empresa: "Maranhão Sabores" },
+      { nome: "Priscila Duarte", email: "priscila.duarte@reginama.com.br", telefone: "(98) 99844-5566", empresa: "São Luís Distribuidora" },
+      { nome: "Eduardo Freitas", email: "eduardo.freitas@reginama.com.br", telefone: "(98) 99755-6677", empresa: "Freitas Comercial" },
+    ],
+  },
+  {
+    sigla: "PA",
+    nome: "Pará",
+    regiao: "Norte",
+    vendedores: [
+      { nome: "Leandro Vasconcelos", email: "leandro.vasconcelos@reginapa.com.br", telefone: "(91) 99966-7788", empresa: "Pará Temperos Belém" },
+      { nome: "Simone Ribeiro", email: "simone.ribeiro@reginapa.com.br", telefone: "(91) 99877-8899", empresa: "Amazônia Sabores" },
+    ],
+  },
+  {
+    sigla: "AP",
+    nome: "Amapá",
+    regiao: "Norte",
+    vendedores: [
+      { nome: "Rodrigo Brito", email: "rodrigo.brito@reginaap.com.br", telefone: "(96) 99988-9900", empresa: "Amapá Distribuidora" },
+    ],
+  },
+  {
+    sigla: "TO",
+    nome: "Tocantins",
+    regiao: "Norte",
+    vendedores: [
+      { nome: "Marcelo Gomes", email: "marcelo.gomes@reginato.com.br", telefone: "(63) 99900-1122", empresa: "Tocantins Sabores" },
+    ],
+  },
+  {
+    sigla: "AM",
+    nome: "Amazonas",
+    regiao: "Norte",
+    vendedores: [
+      { nome: "Sandra Helena", email: "sandra.helena@reginaam.com.br", telefone: "(92) 99811-2233", empresa: "Amazonas Temperos Manaus" },
+    ],
+  },
+  {
+    sigla: "RR",
+    nome: "Roraima",
+    regiao: "Norte",
+    vendedores: [
+      { nome: "Alexandre Neves", email: "alexandre.neves@reginarr.com.br", telefone: "(95) 99922-3344", empresa: "Roraima Distribuição" },
+    ],
+  },
+  {
+    sigla: "AC",
+    nome: "Acre",
+    regiao: "Norte",
+    vendedores: [
+      { nome: "Cristiane Farias", email: "cristiane.farias@reginaac.com.br", telefone: "(68) 99833-4455", empresa: "Acre Sabores Rio Branco" },
+    ],
+  },
+  {
+    sigla: "RO",
+    nome: "Rondônia",
+    regiao: "Norte",
+    vendedores: [
+      { nome: "Daniel Cunha", email: "daniel.cunha@reginaro.com.br", telefone: "(69) 99944-5566", empresa: "Rondônia Distribuidora" },
+    ],
+  },
+  {
+    sigla: "MT",
+    nome: "Mato Grosso",
+    regiao: "Centro-Oeste",
+    vendedores: [
+      { nome: "Viviane Moura", email: "viviane.moura@reginamt.com.br", telefone: "(65) 99855-6677", empresa: "Mato Grosso Temperos" },
+    ],
+  },
+  {
+    sigla: "MS",
+    nome: "Mato Grosso do Sul",
+    regiao: "Centro-Oeste",
+    vendedores: [
+      { nome: "Fábio Rangel", email: "fabio.rangel@reginams.com.br", telefone: "(67) 99766-7788", empresa: "MS Sabores Campo Grande" },
+    ],
+  },
+  {
+    sigla: "GO",
+    nome: "Goiás",
+    regiao: "Centro-Oeste",
+    vendedores: [
+      { nome: "Tatiane Borges", email: "tatiane.borges@reginago.com.br", telefone: "(62) 99977-8899", empresa: "Goiás Distribuidora" },
+      { nome: "Henrique Pacheco", email: "henrique.pacheco@reginago.com.br", telefone: "(62) 99688-9900", empresa: "Pacheco Comercial" },
+    ],
+  },
+  {
+    sigla: "DF",
+    nome: "Distrito Federal",
+    regiao: "Centro-Oeste",
+    vendedores: [
+      { nome: "Amanda Lacerda", email: "amanda.lacerda@reginadf.com.br", telefone: "(61) 99899-0011", empresa: "Brasília Sabores" },
+      { nome: "Pedro Henrique", email: "pedro.henrique@reginadf.com.br", telefone: "(61) 99700-1122", empresa: "DF Premium Distribuição" },
+    ],
+  },
+  {
+    sigla: "MG",
+    nome: "Minas Gerais",
+    regiao: "Sudeste",
+    vendedores: [
+      { nome: "Gabriela Teixeira", email: "gabriela.teixeira@reginamg.com.br", telefone: "(31) 99911-3344", empresa: "Minas Temperos BH" },
+      { nome: "Rafael Campos", email: "rafael.campos@reginamg.com.br", telefone: "(31) 99822-4455", empresa: "Campos Distribuidora" },
+      { nome: "Larissa Figueiredo", email: "larissa.figueiredo@reginamg.com.br", telefone: "(31) 99733-5566", empresa: "Minas Gerais Sabores" },
+    ],
+  },
+  {
+    sigla: "ES",
+    nome: "Espírito Santo",
+    regiao: "Sudeste",
+    vendedores: [
+      { nome: "Nathalia Rezende", email: "nathalia.rezende@reginaes.com.br", telefone: "(27) 99944-6677", empresa: "ES Temperos Vitória" },
+    ],
+  },
+  {
+    sigla: "RJ",
+    nome: "Rio de Janeiro",
+    regiao: "Sudeste",
+    vendedores: [
+      { nome: "Marcos Vinícius", email: "marcos.vinicius@reginarj.com.br", telefone: "(21) 99855-7788", empresa: "Rio Temperos Distribuidora" },
+      { nome: "Bianca Machado", email: "bianca.machado@reginarj.com.br", telefone: "(21) 99766-8899", empresa: "Machado Comercial RJ" },
+    ],
+  },
+  {
+    sigla: "SP",
+    nome: "São Paulo",
+    regiao: "Sudeste",
+    vendedores: [
+      { nome: "Eduardo Sampaio", email: "eduardo.sampaio@reginasp.com.br", telefone: "(11) 99977-0011", empresa: "SP Distribuição Capital" },
+      { nome: "Carolina Antunes", email: "carolina.antunes@reginasp.com.br", telefone: "(11) 99688-1122", empresa: "Antunes & Cia" },
+      { nome: "Leonardo Braga", email: "leonardo.braga@reginasp.com.br", telefone: "(11) 99599-2233", empresa: "São Paulo Sabores" },
+      { nome: "Daniela Paiva", email: "daniela.paiva@reginasp.com.br", telefone: "(11) 99500-3344", empresa: "Paiva Distribuidora" },
+    ],
+  },
+  {
+    sigla: "PR",
+    nome: "Paraná",
+    regiao: "Sul",
+    vendedores: [
+      { nome: "César Augusto", email: "cesar.augusto@reginapr.com.br", telefone: "(41) 99911-4455", empresa: "Paraná Temperos Curitiba" },
+      { nome: "Jéssica Wagner", email: "jessica.wagner@reginapr.com.br", telefone: "(41) 99822-5566", empresa: "Wagner Comercial" },
+    ],
+  },
+  {
+    sigla: "SC",
+    nome: "Santa Catarina",
+    regiao: "Sul",
+    vendedores: [
+      { nome: "Fernando Krüger", email: "fernando.kruger@reginasc.com.br", telefone: "(48) 99933-6677", empresa: "Santa Catarina Sabores" },
+      { nome: "Patrícia Schneider", email: "patricia.schneider@reginasc.com.br", telefone: "(48) 99744-7788", empresa: "Schneider Distribuição" },
+    ],
+  },
+  {
+    sigla: "RS",
+    nome: "Rio Grande do Sul",
+    regiao: "Sul",
+    vendedores: [
+      { nome: "Rodrigo Weber", email: "rodrigo.weber@reginars.com.br", telefone: "(51) 99855-8899", empresa: "RS Distribuidora Porto Alegre" },
+      { nome: "Aline Becker", email: "aline.becker@reginars.com.br", telefone: "(51) 99666-9900", empresa: "Becker & Cia Comercial" },
+    ],
+  },
+];
+
+export const regioes = ["Nordeste", "Norte", "Centro-Oeste", "Sudeste", "Sul"] as const;
+
+export function getEstadosByRegiao(regiao: string): EstadoInfo[] {
+  return estadosData.filter((e) => e.regiao === regiao);
+}
+
+export function getTotalVendedores(): number {
+  return estadosData.reduce((acc, e) => acc + e.vendedores.length, 0);
+}
+
+export function getEstadoBySigla(sigla: string): EstadoInfo | undefined {
+  return estadosData.find((e) => e.sigla === sigla);
+}

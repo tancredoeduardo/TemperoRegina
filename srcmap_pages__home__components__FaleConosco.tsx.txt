@@ -1,0 +1,207 @@
+import { useState, FormEvent } from "react";
+import { Send, Check, MessageSquare, Phone, Mail, MapPin, Clock, Instagram, Facebook, Youtube } from "lucide-react";
+import ScrollReveal from "@/components/base/ScrollReveal";
+
+export default function FaleConosco() {
+  const [formData, setFormData] = useState({ nome: "", email: "", telefone: "", mensagem: "" });
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+    setTimeout(() => setSubmitted(false), 5000);
+    setFormData({ nome: "", email: "", telefone: "", mensagem: "" });
+  };
+
+  return (
+    <section id="faleconosco" className="bg-regina-cream py-12 md:py-20">
+      <div className="max-w-6xl mx-auto px-4 md:px-6">
+        <ScrollReveal>
+          <div className="text-center mb-8 md:mb-12">
+            <div className="inline-flex items-center gap-2 mb-2">
+              <MessageSquare className="w-4 h-4 text-regina-red" />
+              <span className="text-xs font-semibold text-regina-red uppercase tracking-wider">Fale Conosco</span>
+            </div>
+            <h2 className="text-xl md:text-3xl font-bold text-gray-900 uppercase tracking-wide mb-2">
+              Entre em Contato
+            </h2>
+            <p className="text-xs md:text-sm text-gray-500 max-w-md mx-auto">
+              Sua opinião é muito importante para nós. Envie sua mensagem e responderemos em breve.
+            </p>
+          </div>
+        </ScrollReveal>
+
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 md:gap-8">
+          {/* Info cards - left side */}
+          <ScrollReveal className="lg:col-span-2">
+            <div className="space-y-4">
+              <div className="bg-white rounded-xl p-4 md:p-5 border border-gray-100">
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-regina-red/10 flex items-center justify-center shrink-0">
+                    <MapPin className="w-4 h-4 text-regina-red" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">Endereço</p>
+                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+                      Av. Alberto Maranhão, 100 - Belo Horizonte<br />
+                      Mossoró - RN, CEP: 59600-485
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-xl p-4 md:p-5 border border-gray-100">
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-regina-red/10 flex items-center justify-center shrink-0">
+                    <Phone className="w-4 h-4 text-regina-red" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">Telefone</p>
+                    <p className="text-xs text-gray-500 mt-0.5">(84) 3316-1600</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-xl p-4 md:p-5 border border-gray-100">
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-regina-red/10 flex items-center justify-center shrink-0">
+                    <Mail className="w-4 h-4 text-regina-red" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">E-mail</p>
+                    <p className="text-xs text-gray-500 mt-0.5">sac@temperoregina.com.br</p>
+                    <p className="text-xs text-gray-500">comercial@temperoregina.com.br</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-xl p-4 md:p-5 border border-gray-100">
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-regina-red/10 flex items-center justify-center shrink-0">
+                    <Clock className="w-4 h-4 text-regina-red" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">Horário de Atendimento</p>
+                    <p className="text-xs text-gray-500 mt-0.5">Segunda a Sexta: 8h - 18h</p>
+                    <p className="text-xs text-gray-500">Sábado: 8h - 12h</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Social */}
+              <div className="bg-white rounded-xl p-4 md:p-5 border border-gray-100">
+                <p className="text-sm font-semibold text-gray-900 mb-3">Redes Sociais</p>
+                <div className="flex items-center gap-2">
+                  <a
+                    href="https://instagram.com/temperoregina"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-9 h-9 flex items-center justify-center rounded-lg bg-gray-50 text-gray-600 hover:bg-regina-red hover:text-white transition-all duration-300"
+                    aria-label="Instagram"
+                  >
+                    <Instagram className="w-4 h-4" />
+                  </a>
+                  <a
+                    href="https://www.facebook.com/TemperoRegina/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-9 h-9 flex items-center justify-center rounded-lg bg-gray-50 text-gray-600 hover:bg-regina-red hover:text-white transition-all duration-300"
+                    aria-label="Facebook"
+                  >
+                    <Facebook className="w-4 h-4" />
+                  </a>
+                  <a
+                    href="https://www.youtube.com/user/TemperoRegina"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-9 h-9 flex items-center justify-center rounded-lg bg-gray-50 text-gray-600 hover:bg-regina-red hover:text-white transition-all duration-300"
+                    aria-label="YouTube"
+                  >
+                    <Youtube className="w-4 h-4" />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </ScrollReveal>
+
+          {/* Form - right side */}
+          <ScrollReveal delay={0.1} className="lg:col-span-3">
+            <div className="bg-white rounded-xl p-5 md:p-8 border border-gray-100 h-full">
+              <h3 className="text-sm font-semibold text-gray-900 mb-5">Envie sua mensagem</h3>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                      Nome completo
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.nome}
+                      onChange={(e) => setFormData((p) => ({ ...p, nome: e.target.value }))}
+                      className="w-full px-3 py-2.5 border border-gray-200 rounded-md text-sm focus:outline-none focus:border-regina-red focus:ring-1 focus:ring-regina-red/20 bg-white transition-all"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                      E-mail
+                    </label>
+                    <input
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData((p) => ({ ...p, email: e.target.value }))}
+                      className="w-full px-3 py-2.5 border border-gray-200 rounded-md text-sm focus:outline-none focus:border-regina-red focus:ring-1 focus:ring-regina-red/20 bg-white transition-all"
+                      required
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                    Telefone
+                  </label>
+                  <input
+                    type="tel"
+                    value={formData.telefone}
+                    onChange={(e) => setFormData((p) => ({ ...p, telefone: e.target.value }))}
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-md text-sm focus:outline-none focus:border-regina-red focus:ring-1 focus:ring-regina-red/20 bg-white transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                    Mensagem
+                  </label>
+                  <textarea
+                    value={formData.mensagem}
+                    onChange={(e) => setFormData((p) => ({ ...p, mensagem: e.target.value }))}
+                    rows={4}
+                    maxLength={500}
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-md text-sm focus:outline-none focus:border-regina-red focus:ring-1 focus:ring-regina-red/20 bg-white transition-all resize-none"
+                    placeholder="Deixe aqui seu comentário, sugestão ou crítica..."
+                    required
+                  />
+                  <p className="text-[10px] text-gray-400 mt-1 text-right">
+                    {formData.mensagem.length}/500
+                  </p>
+                </div>
+                <button
+                  type="submit"
+                  className="w-full sm:w-auto bg-regina-red text-white text-sm font-semibold px-8 py-2.5 rounded-md hover:bg-regina-red-dark transition-all duration-300 whitespace-nowrap flex items-center justify-center gap-2"
+                >
+                  <Send className="w-4 h-4" />
+                  ENVIAR MENSAGEM
+                </button>
+              </form>
+
+              {submitted && (
+                <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md flex items-center gap-2 animate-fade-in">
+                  <Check className="w-4 h-4 text-green-600 shrink-0" />
+                  <p className="text-xs text-green-700">Mensagem enviada com sucesso! Entraremos em contato em breve.</p>
+                </div>
+              )}
+            </div>
+          </ScrollReveal>
+        </div>
+      </div>
+    </section>
+  );
+}

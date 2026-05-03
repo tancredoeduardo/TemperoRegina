@@ -1,0 +1,299 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Clock,
+  Send,
+  ChevronRight,
+  CheckCircle,
+} from "lucide-react";
+import Navbar from "@/components/feature/Navbar";
+import Footer from "@/components/feature/Footer";
+import ScrollReveal from "@/components/base/ScrollReveal";
+
+export default function ContactPage() {
+  const [submitted, setSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+    nome: "",
+    email: "",
+    telefone: "",
+    assunto: "",
+    mensagem: "",
+  });
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = () => {
+    setSubmitted(true);
+    setTimeout(() => setSubmitted(false), 5000);
+    setFormData({ nome: "", email: "", telefone: "", assunto: "", mensagem: "" });
+  };
+
+  return (
+    <div className="min-h-screen bg-regina-gray-warm flex flex-col">
+      <Navbar />
+
+      {/* Hero */}
+      <div className="relative w-full h-[200px] md:h-[300px] overflow-hidden" style={{ marginTop: "80px" }}>
+        <div className="absolute inset-0 bg-gradient-to-br from-regina-red via-red-700 to-red-900" />
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-8 left-8 w-28 h-28 rounded-full bg-white/20" />
+          <div className="absolute bottom-8 right-8 w-40 h-40 rounded-full bg-white/10" />
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center px-4">
+            <h1 className="text-3xl md:text-5xl font-bold text-white uppercase tracking-wide mb-2 drop-shadow-lg">
+              Fale Conosco
+            </h1>
+            <p className="text-sm md:text-base text-white/80 max-w-lg mx-auto">
+              Estamos aqui para atender você. Envie sua mensagem ou visite nossa fábrica.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Breadcrumb */}
+      <div className="max-w-6xl mx-auto px-4 md:px-6 py-3 w-full">
+        <nav className="flex items-center gap-2 text-xs md:text-sm text-gray-500">
+          <Link to="/" className="hover:text-regina-red transition-colors">Home</Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-gray-800 font-medium">Contato</span>
+        </nav>
+      </div>
+
+      {/* Info Cards + Map */}
+      <section className="flex-1 py-6 md:py-10">
+        <div className="max-w-6xl mx-auto px-4 md:px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            {/* Info */}
+            <div className="space-y-4 md:space-y-5">
+              <ScrollReveal delay={0}>
+                <div className="bg-white rounded-xl p-5 md:p-6 border border-gray-100 hover:border-regina-red/20 hover:shadow-lg transition-all duration-300 group">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-regina-red/10 flex items-center justify-center shrink-0 group-hover:bg-regina-red group-hover:text-white transition-all duration-300 text-regina-red">
+                      <MapPin className="w-5 h-5 md:w-6 md:h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm md:text-base font-bold text-gray-900 mb-1">Endereço</h3>
+                      <p className="text-xs md:text-sm text-gray-600 leading-relaxed">
+                        Av. Alberto Maranhão, 100 - Belo Horizonte<br />
+                        Mossoró - RN, CEP: 59600-485
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </ScrollReveal>
+
+              <ScrollReveal delay={0.1}>
+                <div className="bg-white rounded-xl p-5 md:p-6 border border-gray-100 hover:border-regina-red/20 hover:shadow-lg transition-all duration-300 group">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-regina-red/10 flex items-center justify-center shrink-0 group-hover:bg-regina-red group-hover:text-white transition-all duration-300 text-regina-red">
+                      <Phone className="w-5 h-5 md:w-6 md:h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm md:text-base font-bold text-gray-900 mb-1">Telefone</h3>
+                      <p className="text-xs md:text-sm text-gray-600">(84) 3316-1600</p>
+                      <p className="text-xs md:text-sm text-gray-600">SAC: sac@temperoregina.com.br</p>
+                    </div>
+                  </div>
+                </div>
+              </ScrollReveal>
+
+              <ScrollReveal delay={0.2}>
+                <div className="bg-white rounded-xl p-5 md:p-6 border border-gray-100 hover:border-regina-red/20 hover:shadow-lg transition-all duration-300 group">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-regina-red/10 flex items-center justify-center shrink-0 group-hover:bg-regina-red group-hover:text-white transition-all duration-300 text-regina-red">
+                      <Mail className="w-5 h-5 md:w-6 md:h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm md:text-base font-bold text-gray-900 mb-1">E-mail</h3>
+                      <p className="text-xs md:text-sm text-gray-600">comercial@temperoregina.com.br</p>
+                      <p className="text-xs md:text-sm text-gray-600">sac@temperoregina.com.br</p>
+                    </div>
+                  </div>
+                </div>
+              </ScrollReveal>
+
+              <ScrollReveal delay={0.3}>
+                <div className="bg-white rounded-xl p-5 md:p-6 border border-gray-100 hover:border-regina-red/20 hover:shadow-lg transition-all duration-300 group">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-regina-red/10 flex items-center justify-center shrink-0 group-hover:bg-regina-red group-hover:text-white transition-all duration-300 text-regina-red">
+                      <Clock className="w-5 h-5 md:w-6 md:h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm md:text-base font-bold text-gray-900 mb-1">Horário de Atendimento</h3>
+                      <p className="text-xs md:text-sm text-gray-600">Segunda a Sexta: 07:30 - 17:00</p>
+                      <p className="text-xs md:text-sm text-gray-600">Sábado e Domingo: Fechado</p>
+                    </div>
+                  </div>
+                </div>
+              </ScrollReveal>
+            </div>
+
+            {/* Map */}
+            <ScrollReveal delay={0.15} direction="left">
+              <div className="bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm h-full min-h-[320px] md:min-h-0">
+                <iframe
+                  title="Localização Tempero Regina"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3973.8234567890123!2d-37.34456789012345!3d-5.187654321098765!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNcKwMTEnMTUuNiJTIDM3wrAyMCczNC4wIlc!5e0!3m2!1spt-BR!2sbr!4v1234567890123"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0, minHeight: "320px" }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              </div>
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
+
+      {/* Form Section */}
+      <section className="py-10 md:py-14 bg-white">
+        <div className="max-w-3xl mx-auto px-4 md:px-6">
+          <ScrollReveal>
+            <div className="text-center mb-8">
+              <h2 className="text-xl md:text-3xl font-bold text-gray-900 uppercase tracking-wide mb-2">
+                Envie sua Mensagem
+              </h2>
+              <p className="text-sm md:text-base text-gray-600">
+                Preencha o formulário abaixo e nossa equipe entrará em contato em breve.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.15}>
+            <form
+              method="POST"
+              action="https://readdy.ai/api/form/d7qmkiaj1g8i0g4g4t30"
+              data-readdy-form
+              className="space-y-4 md:space-y-5"
+              onSubmit={(e) => {
+                const email = (e.currentTarget.elements.namedItem("email") as HTMLInputElement)?.value;
+                if (!email || !email.includes("@")) {
+                  e.preventDefault();
+                  alert("Por favor, insira um e-mail válido.");
+                  return;
+                }
+                handleSubmit();
+              }}
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="nome" className="block text-left text-sm font-medium text-gray-700 mb-1">
+                    Nome completo *
+                  </label>
+                  <input
+                    type="text"
+                    id="nome"
+                    name="nome"
+                    value={formData.nome}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-regina-red focus:ring-1 focus:ring-regina-red/20 bg-white"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" className="block text-left text-sm font-medium text-gray-700 mb-1">
+                    E-mail *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-regina-red focus:ring-1 focus:ring-regina-red/20 bg-white"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="telefone" className="block text-left text-sm font-medium text-gray-700 mb-1">
+                    Telefone
+                  </label>
+                  <input
+                    type="tel"
+                    id="telefone"
+                    name="telefone"
+                    value={formData.telefone}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-regina-red focus:ring-1 focus:ring-regina-red/20 bg-white"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="assunto" className="block text-left text-sm font-medium text-gray-700 mb-1">
+                    Assunto *
+                  </label>
+                  <select
+                    id="assunto"
+                    name="assunto"
+                    value={formData.assunto}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-regina-red focus:ring-1 focus:ring-regina-red/20 bg-white"
+                  >
+                    <option value="">Selecione...</option>
+                    <option value="comercial">Comercial / Vendas</option>
+                    <option value="sac">SAC / Dúvidas</option>
+                    <option value="revenda">Quero ser Revendedor</option>
+                    <option value="parceria">Parcerias</option>
+                    <option value="trabalhe">Trabalhe Conosco</option>
+                    <option value="outro">Outro</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="mensagem" className="block text-left text-sm font-medium text-gray-700 mb-1">
+                  Mensagem *
+                </label>
+                <textarea
+                  id="mensagem"
+                  name="mensagem"
+                  value={formData.mensagem}
+                  onChange={handleChange}
+                  required
+                  rows={5}
+                  maxLength={500}
+                  className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-regina-red focus:ring-1 focus:ring-regina-red/20 bg-white resize-none"
+                />
+                <p className="text-xs text-gray-400 text-right mt-1">{formData.mensagem.length}/500</p>
+              </div>
+
+              <div className="flex items-center justify-center pt-2">
+                <button
+                  type="submit"
+                  className="group inline-flex items-center gap-2 bg-regina-red text-white text-sm font-bold px-8 py-3 rounded-lg hover:bg-regina-red-dark transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+                >
+                  <Send className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                  ENVIAR MENSAGEM
+                </button>
+              </div>
+            </form>
+          </ScrollReveal>
+
+          {submitted && (
+            <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3 animate-fade-in">
+              <CheckCircle className="w-5 h-5 text-green-600 shrink-0" />
+              <p className="text-sm text-green-700">
+                Mensagem enviada com sucesso! Nossa equipe entrará em contato em breve.
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}

@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seja Revendedor - Tempero Regina</title>
+    <style>
+      :root { --red:#b71c1c; --red-deep:#8f1212; --bg:#f4f7fb; --ink:#132033; --muted:#59677a; --ok:#067647; --err:#b42318; --line:#d9e1ec; }
+      * { box-sizing:border-box; }
+      body { margin:0; font-family:"Segoe UI", Arial, sans-serif; color:var(--ink); background:var(--bg); }
+      .hero {
+        background:
+          radial-gradient(650px 220px at 10% -20%, rgba(247,181,0,.35), transparent 60%),
+          linear-gradient(130deg,var(--red),var(--red-deep));
+        color:#fff; padding:32px 18px;
+      }
+      .hero h1 { margin:0; font-size:clamp(1.5rem,3vw,2.1rem); }
+      .hero p { margin:10px 0 0; max-width:780px; opacity:.9; }
+      .wrap { max-width:980px; margin:20px auto; padding:0 14px 40px; }
+      .panel { background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px; box-shadow:0 2px 12px rgba(15,23,42,.04); }
+      .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; }
+      label { display:block; font-size:.86rem; margin-bottom:4px; font-weight:600; color:#344054; }
+      input, select, textarea {
+        width:100%; border:1px solid #cfd8e3; border-radius:8px; padding:10px 11px; font:inherit;
+        transition:border-color .14s ease, box-shadow .14s ease;
+      }
+      input:focus, select:focus, textarea:focus {
+        outline:none; border-color:var(--red); box-shadow:0 0 0 3px rgba(183,28,28,.12);
+      }
+      textarea { min-height:110px; resize:vertical; }
+      .actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+      button, .ghost {
+        border:0; border-radius:8px; padding:10px 14px; font-weight:700; cursor:pointer; text-decoration:none;
+        transition:transform .14s ease, box-shadow .14s ease, background-color .14s ease;
+      }
+      button { background:var(--red); color:#fff; }
+      button:hover { background:var(--red-deep); transform:translateY(-1px); box-shadow:0 6px 14px rgba(15,23,42,.12); }
+      .ghost { background:#fff; color:#344054; border:1px solid #d0d7e2; }
+      .ghost:hover { transform:translateY(-1px); box-shadow:0 6px 14px rgba(15,23,42,.08); }
+      .msg { margin-top:12px; border-radius:8px; padding:10px 12px; font-size:.92rem; display:none; }
+      .msg.ok { display:block; color:var(--ok); background:#ecfdf3; border:1px solid #abefc6; }
+      .msg.err { display:block; color:var(--err); background:#fef3f2; border:1px solid #fecdca; }
+      .small { color:var(--muted); font-size:.82rem; margin-top:10px; }
+      .stats { margin:14px 0; color:#475467; font-size:.9rem; }
+    </style>
+  </head>
+  <body>
+    <header class="hero">
+      <h1>Quero Revender Tempero Regina</h1>
+      <p>Preencha seu cadastro comercial. Nossa equipe regional entra em contato para apresentar condições, logística e mix ideal para seu negócio.</p>
+    </header>
+    <main class="wrap">
+      <a class="ghost" href="/">Voltar para o site</a>
+      <p id="stats" class="stats">Carregando cobertura regional...</p>
+      <section class="panel">
+        <form id="revendedores-form">
+          <div class="grid">
+            <div>
+              <label for="empresa">Empresa *</label>
+              <input id="empresa" name="empresa" required />
+            </div>
+            <div>
+              <label for="cnpj">CNPJ *</label>
+              <input id="cnpj" name="cnpj" required placeholder="00.000.000/0000-00" inputmode="numeric" maxlength="18" />
+            </div>
+            <div>
+              <label for="nome">Responsável *</label>
+              <input id="nome" name="nome" required />
+            </div>
+            <div>
+              <label for="cargo">Cargo</label>
+              <input id="cargo" name="cargo" />
+            </div>
+            <div>
+              <label for="email">E-mail comercial *</label>
+              <input id="email" name="email" type="email" required />
+            </div>
+            <div>
+              <label for="telefone">Telefone / WhatsApp *</label>
+              <input id="telefone" name="telefone" required />
+            </div>
+            <div>
+              <label for="estado">Estado *</label>
+              <select id="estado" name="estado" required><option value="">Selecione</option></select>
+            </div>
+            <div>
+              <label for="cidade">Cidade *</label>
+              <input id="cidade" name="cidade" required />
+            </div>
+          </div>
+          <div style="margin-top:12px;">
+            <label for="perfil">Perfil do negócio *</label>
+            <select id="perfil" name="perfil" required>
+              <option value="">Selecione</option>
+              <option value="atacado-distribuidor">Atacado / Distribuidor</option>
+              <option value="varejo-supermercado">Supermercado / Varejo</option>
+              <option value="food-service">Food Service</option>
+              <option value="industria">Indústria</option>
+              <option value="outro">Outro</option>
+            </select>
+          </div>
+          <div style="margin-top:12px;">
+            <label for="mensagem">Mensagem</label>
+            <textarea id="mensagem" name="mensagem" placeholder="Conte mais sobre sua operação, volume e regiões atendidas."></textarea>
+          </div>
+          <div class="actions">
+            <button id="submit" type="submit">Enviar cadastro</button>
+            <a class="ghost" href="/catalogo-impressao">Ver catálogo imprimível</a>
+          </div>
+          <p id="msg" class="msg" role="status"></p>
+          <p class="small">Ao enviar, os dados são recebidos pelo endpoint local `/api/revendedores` para processamento comercial.</p>
+        </form>
+      </section>
+    </main>
+    <script>
+      const form = document.getElementById("revendedores-form");
+      const state = document.getElementById("estado");
+      const msg = document.getElementById("msg");
+      const submit = document.getElementById("submit");
+      const cnpj = document.getElementById("cnpj");
+
+      function setMessage(text, kind) {
+        msg.className = kind ? `msg ${kind}` : "msg";
+        msg.textContent = text;
+      }
+
+      function onlyDigits(value) {
+        return String(value || "").replace(/\D/g, "");
+      }
+
+      function formatCnpj(value) {
+        const v = onlyDigits(value).slice(0, 14);
+        if (v.length <= 2) return v;
+        if (v.length <= 5) return `${v.slice(0, 2)}.${v.slice(2)}`;
+        if (v.length <= 8) return `${v.slice(0, 2)}.${v.slice(2, 5)}.${v.slice(5)}`;
+        if (v.length <= 12) return `${v.slice(0, 2)}.${v.slice(2, 5)}.${v.slice(5, 8)}/${v.slice(8)}`;
+        return `${v.slice(0, 2)}.${v.slice(2, 5)}.${v.slice(5, 8)}/${v.slice(8, 12)}-${v.slice(12)}`;
+      }
+
+      function isValidCnpj(value) {
+        const digits = onlyDigits(value);
+        if (digits.length !== 14) return false;
+        if (/^(\d)\1{13}$/.test(digits)) return false;
+        const calcCheck = (base, factors) => {
+          let sum = 0;
+          for (let i = 0; i < factors.length; i += 1) {
+            sum += Number(base[i]) * factors[i];
+          }
+          const rest = sum % 11;
+          return rest < 2 ? 0 : 11 - rest;
+        };
+        const d1 = calcCheck(digits, [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
+        const d2 = calcCheck(`${digits.slice(0, 12)}${d1}`, [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
+        return digits.endsWith(`${d1}${d2}`);
+      }
+
+      async function loadStates() {
+        try {
+          const res = await fetch("/api/sellers/states");
+          if (!res.ok) throw new Error("Erro ao carregar estados");
+          const data = await res.json();
+          const states = data.states || [];
+          states.sort((a, b) => a.nome.localeCompare(b.nome));
+          states.forEach((s) => {
+            const opt = document.createElement("option");
+            opt.value = s.sigla;
+            opt.textContent = `${s.sigla} - ${s.nome}`;
+            state.appendChild(opt);
+          });
+          document.getElementById("stats").textContent = `${states.length} estados com cobertura comercial mapeada.`;
+        } catch {
+          document.getElementById("stats").textContent = "Cobertura regional indisponível no momento.";
+        }
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!isValidCnpj(cnpj.value)) {
+          setMessage("CNPJ inválido. Confira o número e tente novamente.", "err");
+          cnpj.focus();
+          return;
+        }
+        submit.disabled = true;
+        const original = submit.textContent;
+        submit.textContent = "Enviando...";
+        setMessage("", "");
+        const payload = Object.fromEntries(new FormData(form).entries());
+        try {
+          const res = await fetch("/api/revendedores", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          let body = {};
+          try { body = await res.json(); } catch {}
+          if (!res.ok) throw new Error(body.error || "Falha no envio");
+          form.reset();
+          setMessage("Cadastro recebido. Nosso time comercial fará contato em breve.", "ok");
+        } catch (error) {
+          setMessage(error?.message || "Não foi possível enviar agora. Tente novamente em alguns minutos.", "err");
+        } finally {
+          submit.disabled = false;
+          submit.textContent = original;
+        }
+      });
+
+      cnpj.addEventListener("input", () => {
+        cnpj.value = formatCnpj(cnpj.value);
+      });
+
+      loadStates();
+    </script>
+  </body>
+</html>

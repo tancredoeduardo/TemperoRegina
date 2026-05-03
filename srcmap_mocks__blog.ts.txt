@@ -1,0 +1,138 @@
+export interface BlogPost {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  image: string;
+  date: string;
+  category: string;
+  readTime: string;
+}
+
+export const blogPosts: BlogPost[] = [
+  {
+    id: 1,
+    title: "Tempero Regina completa 59 anos de história e tradição",
+    slug: "59-anos-historia",
+    excerpt:
+      "Desde 1967, a Tempero Regina leva sabor à mesa dos brasileiros. Conheça a trajetória de uma empresa que começou com entregas de bicicleta e hoje é referência nacional.",
+    content: `A história da Tempero Regina começou em 1967, em Mossoró, Rio Grande do Norte. O que era um pequeno negócio familiar, vendendo temperos caseiros de porta em porta, transformou-se na maior indústria de temperos e condimentos do Nordeste brasileiro.
+
+As primeiras entregas eram feitas de bicicleta pelos bairros mossoroenses. Hoje, uma frota de 18 caminhões percorre o Nordeste e partes do Norte do Brasil, levando mais de 100 produtos diferenciados.
+
+A empresa permanece fiel aos seus valores: paixão pelo sabor, compromisso com a qualidade, respeito às origens e inovação constante. Cada produto que sai da fábrica carrega décadas de experiência e o carinho de quem acredita que a boa comida une pessoas.
+
+Em 2026, celebramos 59 anos com a mesma energia do primeiro dia. Obrigado a todos que fazem parte dessa história!`,
+    image:
+      "https://readdy.ai/api/search-image?query=A nostalgic vintage Brazilian family kitchen scene from the 1960s with warm sepia tones, old wooden furniture, spice jars on shelves, a bicycle leaning against the wall, traditional Northeastern Brazil atmosphere, photorealistic, warm lighting, nostalgic mood",
+    date: "2026-04-15",
+    category: "Institucional",
+    readTime: "4 min",
+  },
+  {
+    id: 2,
+    title: "Lançamento: Tempero Completo com Amaciante de Carne",
+    slug: "lancamento-tempero-amaciante",
+    excerpt:
+      "Nova fórmula inovadora combina o sabor tradicional Regina com propriedades que deixam a carne mais macia e suculenta. Disponível em 500ml.",
+    content: `A Tempero Regina inova mais uma vez com o lançamento do Tempero Completo com Amaciante de Carne. Desenvolvido após anos de pesquisa e desenvolvimento, este produto revolucionário combina o sabor inconfundível da marca com enzimas naturais que amaciam a carne durante o cozimento.
+
+O resultado? Carnes mais macias, suculentas e com um sabor penetrante que surpreende até os paladares mais exigentes. Ideal para churrascos, cozidos de panela, assados e qualquer receita que leve carne vermelha ou aves.
+
+O produto mantém a base 100% natural da linha Tradicional, sem adição de conservantes artificiais. Já está disponível em supermercados de todo o Nordeste e pode ser encontrado em embalagens de 500ml.
+
+Experimente e descubra por que Regina continua sendo o sabor que conquista o Brasil.`,
+    image:
+      "https://readdy.ai/api/search-image?query=A premium seasoning product bottle on a modern white pedestal with dramatic red and gold spotlight lighting, fresh raw meat cuts and herbs around it, professional food product photography, clean minimal background, elegant commercial shot",
+    date: "2026-03-20",
+    category: "Lançamentos",
+    readTime: "3 min",
+  },
+  {
+    id: 3,
+    title: "Regina marca presença no Festival de Gastronomia do Nordeste",
+    slug: "festival-gastronomia-nordeste",
+    excerpt:
+      "Com estande de 80m², a Tempero Regina participou do maior evento gastronômico da região, apresentando lançamentos e workshop com chefs renomados.",
+    content: `A Tempero Regina esteve presente no Festival de Gastronomia do Nordeste 2026, realizado em Fortaleza, Ceará. O evento, considerado o maior da região, reuniu mais de 50 mil visitantes em três dias de programação.
+
+Nosso estande de 80m² foi um dos mais visitados do festival. Lá, o público pôde degustar pratos preparados com a linha completa de temperos e condimentos Regina, conhecer os lançamentos de 2026 e participar de workshops com chefs renomados da culinária nordestina.
+
+O destaque ficou por conta do workshop "Sabor Nordestino com Regina", ministrado pelo Chef Regina, que ensinou técnicas de tempero tradicionais e criativas usando nossa linha Gourmet.
+
+A participação reforça o compromisso da marca com a valorização da culinária regional e o fortalecimento dos laços com consumidores e parceiros comerciais.`,
+    image:
+      "https://readdy.ai/api/search-image?query=A vibrant Brazilian food festival scene with red branded booth displaying spice products, crowd of people tasting food, chefs cooking demonstrations, colorful decorations with Northeastern Brazilian style, warm festive lighting, professional event photography",
+    date: "2026-05-18",
+    category: "Eventos",
+    readTime: "3 min",
+  },
+  {
+    id: 4,
+    title: "O poder do alho na culinária brasileira",
+    slug: "poder-do-alho",
+    excerpt:
+      "Descubra por que o alho é um dos ingredientes mais versáteis da cozinha brasileira e como a linha de alhos Regina facilita o dia a dia.",
+    content: `O alho é, sem dúvida, um dos ingredientes mais importantes da culinária brasileira. Presente em praticamente todas as refeições, ele traz aroma, sabor e até propriedades medicinais reconhecidas pela ciência.
+
+A Tempero Regina oferece uma linha completa de produtos à base de alho que facilitam o dia a dia do cozinheiro: alho picado em diversos tamanhos (200g, 450g, 1kg, 2kg), pasta de alho pronta para uso, extrato de alho e até vinagre aromatizado de alho.
+
+Todos os produtos são feitos com alho selecionado, cultivado em parceria com agricultores familiares do Rio Grande do Norte. O processo de conservação mantém o sabor fresco por meses, eliminando o trabalho de descascar e picar.
+
+Seja para um refogado básico, um molho sofisticado ou uma marinada especial, a linha de alhos Regina tem a solução perfeita para você.`,
+    image:
+      "https://readdy.ai/api/search-image?query=Close-up of fresh garlic cloves and minced garlic in small glass bowls on a rustic wooden cutting board, warm kitchen lighting, aromatic herbs around, professional food photography, warm golden tones, appetizing and inviting atmosphere",
+    date: "2026-02-10",
+    category: "Receitas",
+    readTime: "5 min",
+  },
+  {
+    id: 5,
+    title: "5 receitas imperdíveis com Vinagre Regina",
+    slug: "5-receitas-vinagre-regina",
+    excerpt:
+      "Do vinagrete clássico à marinada oriental, descubra receitas fáceis e deliciosas que ficam ainda melhores com Vinagre de Álcool Regina.",
+    content: `O vinagre é um ingrediente subestimado na cozinha brasileira. Além de temperar saladas, ele pode marinar carnes, balancear molhos, conservar alimentos e até ser usado em sobremesas.
+
+A Tempero Regina oferece uma linha variada de vinagres: tradicional, aromatizado de alho, limão, maçã e as versões de 300ml, 500ml e 5 litros para uso profissional.
+
+Separamos 5 receitas fáceis que você pode fazer hoje mesmo:
+
+1. Vinagrete Clássico: misture cebola, pimentão, tomate, salsinha e Vinagre Regina com azeite.
+2. Molho Oriental: combine Shoyu Regina, Vinagre de Limão Regina, gengibre e mel.
+3. Conserva de Pepino: pepino em rodelas, água, sal, açúcar e Vinagre Regina.
+4. Marinada para Frango: Vinagre de Maçã Regina, alho, limão e ervas.
+5. Redução de Vinagre: reduza Vinagre Regina em fogo baixo com mel para criar um glacé maravilhoso.
+
+Experimente e surpreenda sua família!`,
+    image:
+      "https://readdy.ai/api/search-image?query=A top-down flat lay of various vinegar bottles and fresh salad ingredients on a light marble surface, colorful vegetables and herbs arranged artfully, professional food styling photography, bright natural lighting, clean and modern aesthetic",
+    date: "2026-01-28",
+    category: "Receitas",
+    readTime: "4 min",
+  },
+  {
+    id: 6,
+    title: "Expansão: Tempero Regina chega ao Norte do Brasil",
+    slug: "expansao-norte-brasil",
+    excerpt:
+      "Após consolidar presença em todo o Nordeste, a Tempero Regina inicia operações comerciais nos estados do Pará, Amapá e Tocantins.",
+    content: `A Tempero Regina dá mais um passo importante em sua história de crescimento. Após consolidar sua posição como líder no Nordeste, a empresa inicia operações comerciais na região Norte do Brasil.
+
+Os estados do Pará, Amapá e Tocantins passam a contar com distribuição direta dos produtos Regina. A expansão faz parte do plano estratégico de crescimento que visa levar o sabor Regina a todos os cantos do país.
+
+"O Norte tem uma culinária rica e diversificada. Acreditamos que nossos temperos e condimentos têm tudo a ver com os sabores amazônicos", afirma a diretora comercial da empresa.
+
+A expansão inclui a contratação de representantes comerciais locais, parcerias com distribuidores regionais e investimento em marketing pontual. A meta é que, até 2027, a Regina esteja presente em todos os estados brasileiros.
+
+A empresa mantém seu compromisso de gerar empregos e valorizar a produção local em todas as regiões onde atua.`,
+    image:
+      "https://readdy.ai/api/search-image?query=A dramatic aerial view of the Amazon rainforest meeting a modern highway with trucks driving, Brazilian Northern landscape with rivers and tropical vegetation, golden sunset light, cinematic wide shot, professional travel photography",
+    date: "2026-03-05",
+    category: "Institucional",
+    readTime: "3 min",
+  },
+];
+
+export const blogCategories = ["Todas", "Institucional", "Lançamentos", "Eventos", "Receitas"];

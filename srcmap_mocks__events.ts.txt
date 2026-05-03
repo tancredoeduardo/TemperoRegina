@@ -1,0 +1,195 @@
+export interface ScheduleItem {
+  time: string;
+  activity: string;
+}
+
+export interface EventItem {
+  id: number;
+  title: string;
+  date: string;
+  time?: string;
+  location: string;
+  address?: string;
+  description: string;
+  fullDescription?: string;
+  image: string;
+  category: string;
+  featured?: boolean;
+  price?: string;
+  schedule?: ScheduleItem[];
+  highlights?: string[];
+}
+
+export const eventsData: EventItem[] = [
+  {
+    id: 1,
+    title: "Festival de Gastronomia do Nordeste",
+    date: "2026-05-15",
+    time: "10:00 - 20:00",
+    location: "Fortaleza, CE",
+    address: "Centro de Eventos do Ceará, Av. Santos Dumont, 2220",
+    description: "A Tempero Regina estará presente no maior festival gastronômico do Nordeste, apresentando nossa linha completa de temperos e condimentos. Venha experimentar o sabor autêntico da nossa terra!",
+    fullDescription: "O Festival de Gastronomia do Nordeste é o evento mais esperado por amantes da culinária regional. A Tempero Regina terá um estande exclusivo de 80m² onde visitantes poderão degustar pratos preparados com nossa linha completa de temperos e condimentos. Contaremos com a presença de chefs renomados que demonstrarão o uso criativo dos nossos produtos em receitas tradicionais e contemporâneas.",
+    image: "https://readdy.ai/api/search-image?query=A vibrant food festival booth decorated with red and yellow banners featuring spices and seasonings, bustling crowd of people tasting food at an outdoor gastronomic event in Brazil with colorful decorations and tropical atmosphere, professional food fair setting, warm golden lighting, photography style, high quality",
+    category: "Feira",
+    featured: true,
+    price: "Gratuito",
+    schedule: [
+      { time: "10:00", activity: "Abertura do estande Tempero Regina" },
+      { time: "11:30", activity: "Workshop de temperos com Chef Regina" },
+      { time: "14:00", activity: "Degustação de lançamentos" },
+      { time: "16:00", activity: "Demonstração ao vivo de culinária nordestina" },
+      { time: "18:00", activity: "Happy hour com petiscos temperados" },
+    ],
+    highlights: ["Degustação gratuita", "Workshop ao vivo", "Brindes exclusivos", "Meet & Greet com chefs"],
+  },
+  {
+    id: 2,
+    title: "Lançamento Tempero Completo com Amaciante",
+    date: "2026-04-20",
+    time: "19:00 - 22:00",
+    location: "Mossoró, RN",
+    address: "Fábrica Tempero Regina - Rodovia RN-233, Km 12",
+    description: "Lançamento exclusivo do novo Tempero Completo com Amaciante de Carne Regina. Um evento especial para nossos parceiros e clientes com degustação e apresentação do produto.",
+    fullDescription: "A Tempero Regina convida parceiros, clientes e imprensa para o lançamento exclusivo do novo Tempero Completo com Amaciante de Carne. Desenvolvido após anos de pesquisa, este produto inovador combina o sabor tradicional Regina com propriedades que deixam a carne mais macia e suculenta. O evento incluirá apresentação da nova linha de embalagens, degustação guiada e coquetel de networking.",
+    image: "https://readdy.ai/api/search-image?query=A product launch event with red and gold decorations, elegant product display of seasoning bottles on a white podium with dramatic spotlighting, Brazilian corporate event atmosphere, professional presentation setting with audience chairs, modern and clean design",
+    category: "Lançamento",
+    featured: true,
+    price: "Convite exclusivo",
+    schedule: [
+      { time: "19:00", activity: "Recepção dos convidados" },
+      { time: "19:30", activity: "Apresentação do produto" },
+      { time: "20:15", activity: "Degustação com harmonização" },
+      { time: "21:00", activity: "Coquetel de networking" },
+    ],
+    highlights: ["Lançamento exclusivo", "Degustação premium", "Coquetel de networking", "Kit de brindes"],
+  },
+  {
+    id: 3,
+    title: "Supermercado Nordeste Expo 2026",
+    date: "2026-06-10",
+    time: "09:00 - 18:00",
+    location: "Recife, PE",
+    address: "Centro de Convenções de Pernambuco, Av. Eng. Abdias de Carvalho",
+    description: "A maior feira de supermercados da região Nordeste. Estaremos no estande 42 apresentando nossas novidades e fortalecendo parcerias comerciais.",
+    fullDescription: "A Supermercado Nordeste Expo é a principal vitrine do varejo alimentício da região. A Tempero Regina estará presente no estande 42 com uma exposição completa de nossa linha de produtos, incluindo lançamentos exclusivos para o canal supermercadista. Nossa equipe comercial estará disponível para apresentar condições especiais e discutir parcerias estratégicas.",
+    image: "https://readdy.ai/api/search-image?query=A large trade show booth with red branding and spice products displayed on shelves, professional business exhibition hall with visitors walking around, modern exhibition stand design with product displays, bright overhead lighting, corporate event photography",
+    category: "Feira",
+    price: "Gratuito (credenciamento prévio)",
+    schedule: [
+      { time: "09:00", activity: "Abertura do estande" },
+      { time: "10:30", activity: "Palestra: Tendências em temperos" },
+      { time: "14:00", activity: "Rodada de negócios" },
+      { time: "16:00", activity: "Demonstração de produtos" },
+    ],
+    highlights: ["Estande 42", "Condições especiais", "Rodada de negócios", "Lançamentos exclusivos"],
+  },
+  {
+    id: 4,
+    title: "Workshop de Culinária com Chef Regina",
+    date: "2026-05-28",
+    time: "14:00 - 18:00",
+    location: "Natal, RN",
+    address: "Escola de Gastronomia Natal Gourmet, Rua Praia de Genipabu, 150",
+    description: "Workshop exclusivo de culinária nordestina usando produtos Tempero Regina. Aprenda receitas tradicionais com um toque especial dos nossos temperos.",
+    fullDescription: "Neste workshop hands-on, os participantes aprenderão a preparar pratos típicos do Nordeste brasileiro utilizando a linha completa de temperos Regina. O Chef Regina conduzirá uma jornada sensorial explorando os sabores, aromas e técnicas que fazem da culinária nordestina uma das mais ricas do Brasil. Cada participante receberá um kit de temperos para praticar em casa.",
+    image: "https://readdy.ai/api/search-image?query=A cooking workshop scene with a chef demonstrating seasoning techniques, hands preparing traditional Brazilian food on a wooden counter with red and yellow branded aprons, warm kitchen lighting, professional culinary class setting, multiple participants watching attentively",
+    category: "Workshop",
+    price: "R$ 120,00",
+    schedule: [
+      { time: "14:00", activity: "Boas-vindas e apresentação" },
+      { time: "14:30", activity: "Módulo 1: Temperos básicos" },
+      { time: "15:30", activity: "Módulo 2: Técnicas avançadas" },
+      { time: "16:30", activity: "Módulo 3: Criação de receitas" },
+      { time: "17:30", activity: "Certificados e coffee break" },
+    ],
+    highlights: ["Hands-on", "Kit de temperos incluso", "Certificado de participação", "Coffee break"],
+  },
+  {
+    id: 5,
+    title: "Aniversário de 59 anos da Tempero Regina",
+    date: "2026-07-15",
+    time: "16:00 - 23:00",
+    location: "Mossoró, RN",
+    address: "Praça da Independência, Centro de Mossoró",
+    description: "Celebração dos 59 anos da Tempero Regina com evento aberto à comunidade, shows, comidas típicas e muito mais. Venha celebrar conosco!",
+    fullDescription: "Celebre conosco 59 anos de história, sabor e tradição! O aniversário da Tempero Regina será uma festa aberta à comunidade mossoroense e visitantes. Teremos shows de artistas locais, barracas de comidas típicas preparadas com nossos temperos, brincadeiras para crianças, sorteios de produtos e um grande bolo de aniversário para todos. É a nossa forma de agradecer o carinho de todos esses anos.",
+    image: "https://readdy.ai/api/search-image?query=A festive outdoor celebration with red and yellow decorations, Brazilian community party with colorful banners and food stalls, confetti in the air, happy crowd celebrating a company anniversary, tropical setting with palm trees, warm sunset lighting",
+    category: "Comemoração",
+    featured: true,
+    price: "Gratuito",
+    schedule: [
+      { time: "16:00", activity: "Abertura com apresentação cultural" },
+      { time: "17:00", activity: "Shows ao vivo" },
+      { time: "19:00", activity: "Degustação de comidas típicas" },
+      { time: "20:30", activity: "Corte do bolo de aniversário" },
+      { time: "21:30", activity: "Sorteios e brindes" },
+    ],
+    highlights: ["Evento aberto", "Shows ao vivo", "Comidas típicas", "Sorteios e brindes"],
+  },
+  {
+    id: 6,
+    title: "Feira Agroindustrial do Rio Grande do Norte",
+    date: "2026-08-05",
+    time: "08:00 - 17:00",
+    location: "Mossoró, RN",
+    address: "Parque de Exposições Francisco Guilherme, Mossoró",
+    description: "Participação na maior feira agroindustrial do estado, destacando nossa cadeia produtiva de temperos e condimentos 100% brasileiros.",
+    fullDescription: "A Feira Agroindustrial do RN reúne os principais produtores e indústrias do estado. A Tempero Regina apresentará sua cadeia produtiva completa, desde a seleção das matérias-primas até o produto final. Visitantes poderão conhecer nossos processos de qualidade, ver demonstrações de produção e degustar nossos produtos mais recentes.",
+    image: "https://readdy.ai/api/search-image?query=An agricultural industry fair with industrial spice production displays, large exhibition hall with agricultural machinery and food processing equipment, professional trade show setting with red accents, Brazilian flag decorations, modern and spacious venue",
+    category: "Feira",
+    price: "Gratuito",
+    schedule: [
+      { time: "08:00", activity: "Abertura oficial" },
+      { time: "09:30", activity: "Visita guiada à fábrica" },
+      { time: "11:00", activity: "Palestra sobre cadeia produtiva" },
+      { time: "14:00", activity: "Demonstração de processos" },
+    ],
+    highlights: ["Visita técnica", "Demonstrações ao vivo", "Degustação", "Networking"],
+  },
+  {
+    id: 7,
+    title: "Dia do Cliente Tempero Regina",
+    date: "2026-09-15",
+    time: "09:00 - 17:00",
+    location: "João Pessoa, PB",
+    address: "Hipermercado Extra, Av. Epitácio Pessoa, 5000",
+    description: "Evento especial de agradecimento aos nossos clientes com promoções exclusivas, brindes e degustação dos lançamentos mais recentes.",
+    fullDescription: "O Dia do Cliente Tempero Regina é a nossa forma de agradecer a fidelidade dos consumidores. Realizado em parceria com grandes redes varejistas, o evento oferece promoções exclusivas, amostras grátis dos lançamentos, brindes personalizados e a presença da equipe Regina para tirar dúvidas e compartilhar receitas. É um dia inteiro dedicado a quem faz parte da nossa história.",
+    image: "https://readdy.ai/api/search-image?query=A customer appreciation event with gift bags and product samples, Brazilian supermarket promotional event with red decorations, happy customers receiving promotional items, festive retail atmosphere with balloons and banners, warm friendly lighting",
+    category: "Promoção",
+    price: "Gratuito",
+    schedule: [
+      { time: "09:00", activity: "Início das promoções" },
+      { time: "10:00", activity: "Degustação de lançamentos" },
+      { time: "13:00", activity: "Workshop rápido de receitas" },
+      { time: "15:00", activity: "Sorteios e brindes" },
+    ],
+    highlights: ["Promoções exclusivas", "Amostras grátis", "Brindes personalizados", "Workshop de receitas"],
+  },
+  {
+    id: 8,
+    title: "Congresso Brasileiro de Alimentos",
+    date: "2026-10-20",
+    time: "08:00 - 18:00",
+    location: "São Paulo, SP",
+    address: "Expo Center Norte, Rua José Bernardo Pinto, 333",
+    description: "A Tempero Regina participa do principal congresso do setor alimentício do país, apresentando nossas inovações em temperos e condimentos.",
+    fullDescription: "O Congresso Brasileiro de Alimentos é o evento mais importante do setor no país. A Tempero Regina terá uma presença marcante com um estande de 120m², palestra técnica sobre inovações em temperos naturais e uma área exclusiva para demonstrações. Nossa equipe de P&D apresentará os resultados das mais recentes pesquisas sobre sabores e tendências alimentícias.",
+    image: "https://readdy.ai/api/search-image?query=A professional congress center with a large stage and presentation screen, Brazilian food industry conference with attendees in business attire, modern auditorium setting with red and white branding, professional corporate event photography, dramatic stage lighting",
+    category: "Congress",
+    price: "R$ 350,00 (inscrição)",
+    schedule: [
+      { time: "08:00", activity: "Credenciamento" },
+      { time: "09:00", activity: "Palestra de abertura" },
+      { time: "11:00", activity: "Apresentação Tempero Regina" },
+      { time: "14:00", activity: "Rodada de negócios B2B" },
+      { time: "16:00", activity: "Networking e coquetel" },
+    ],
+    highlights: ["Palestra técnica", "Rodada B2B", "Estande premium", "Coquetel de networking"],
+  },
+];
+
+export function getEventById(id: number): EventItem | undefined {
+  return eventsData.find((event) => event.id === id);
+}

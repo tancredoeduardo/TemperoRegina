@@ -1,0 +1,110 @@
+import { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { clientesImages } from "@/mocks/home";
+import ScrollReveal from "@/components/base/ScrollReveal";
+
+export default function Clientes() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const checkScroll = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 0);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 2);
+  };
+
+  useEffect(() => {
+    checkScroll();
+    const el = scrollRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", checkScroll, { passive: true });
+    return () => el.removeEventListener("scroll", checkScroll);
+  }, []);
+
+  const scroll = (direction: "left" | "right") => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const amount = direction === "left" ? -320 : 320;
+    el.scrollBy({ left: amount, behavior: "smooth" });
+  };
+
+  return (
+    <section id="clientes" className="bg-regina-red py-12 md:py-20">
+      <div className="max-w-6xl mx-auto px-4 md:px-6">
+        <ScrollReveal>
+          <div className="flex items-center justify-end gap-4 mb-8 md:mb-12">
+            <h2 className="text-2xl md:text-4xl font-bold text-white uppercase tracking-wide">
+              Nossos Clientes
+            </h2>
+            <img
+              src="https://temperoregina.com.br/lib/img/quemsomos-logo.png"
+              alt="Logo Regina"
+              className="h-12 md:h-16 w-auto object-contain hidden md:block"
+            />
+          </div>
+        </ScrollReveal>
+
+        <ScrollReveal delay={0.15}>
+          <div className="relative">
+            {/* Desktop arrows */}
+            <motion.button
+              type="button"
+              onClick={() => scroll("left")}
+              className={`hidden md:flex absolute -left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full bg-white shadow-md text-regina-red transition-all ${
+                canScrollLeft
+                  ? "opacity-100 pointer-events-auto"
+                  : "opacity-0 pointer-events-none"
+              }`}
+              aria-label="Anterior"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </motion.button>
+            <motion.button
+              type="button"
+              onClick={() => scroll("right")}
+              className={`hidden md:flex absolute -right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full bg-white shadow-md text-regina-red transition-all ${
+                canScrollRight
+                  ? "opacity-100 pointer-events-auto"
+                  : "opacity-0 pointer-events-none"
+              }`}
+              aria-label="Próximo"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <ChevronRight className="w-5 h-5" />
+            </motion.button>
+
+            <div
+              ref={scrollRef}
+              className="flex gap-3 md:gap-4 overflow-x-auto scrollbar-hide py-2 px-1"
+            >
+              {clientesImages.map((cliente, i) => (
+                <motion.div
+                  key={cliente.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.03, duration: 0.4 }}
+                  whileHover={{ y: -6, scale: 1.02 }}
+                  className="shrink-0 w-40 md:w-52 h-28 md:h-36 rounded-xl overflow-hidden bg-white flex items-center justify-center border border-gray-100 hover:border-white/40 hover:shadow-xl transition-all duration-300 cursor-pointer group"
+                >
+                  <img
+                    src={cliente.image}
+                    alt={cliente.alt}
+                    className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </ScrollReveal>
+      </div>
+    </section>
+  );
+}
