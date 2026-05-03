@@ -1,3 +1,3 @@
-const { handleRequest } = require("../server/app");
+const { productsHandler } = require("./_shared");
 
-module.exports = handleRequest;
+module.exports = productsHandler;

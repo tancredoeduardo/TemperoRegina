@@ -1,3 +1,3 @@
-const { handleRequest } = require("../server/app");
+const { createPostHandler } = require("./_shared");
 
-module.exports = handleRequest;
+module.exports = createPostHandler("revendedores");

@@ -4,6 +4,11 @@
   "trailingSlash": false,
   "installCommand": "npm install",
   "buildCommand": "npm run build",
+  "functions": {
+    "api/**/*.js": {
+      "excludeFiles": "{assets/**,download/**,chrome-profile*/**,visual-report/**,node_modules/**,*.html,*.css,*.map,*.log,*.png,*.jpg,*.jpeg,*.webp,*.pdf,index-*.js,config-*.js,enhancements.js,server.js}"
+    }
+  },
   "rewrites": [
     {
       "source": "/api/(.*)",
