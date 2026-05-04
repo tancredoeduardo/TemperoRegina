@@ -35,14 +35,15 @@ function copyDirectoryToPublic(directory) {
     const relativePath = path.join(directory, entry.name);
     const sourcePath = path.join(root, relativePath);
     const targetPath = path.join(publicDir, relativePath);
+    const stats = fs.statSync(sourcePath);
 
-    if (entry.isDirectory()) {
+    if (stats.isDirectory()) {
       fs.mkdirSync(targetPath, { recursive: true });
       copyDirectoryToPublic(relativePath);
       continue;
     }
 
-    if (entry.isFile()) {
+    if (stats.isFile()) {
       fs.mkdirSync(path.dirname(targetPath), { recursive: true });
       fs.copyFileSync(sourcePath, targetPath);
     }
@@ -112,11 +113,24 @@ function checkHtmlAssets() {
 function checkVercelConfig() {
   const vercel = readJson("vercel.json");
   assert(vercel.outputDirectory === "public", "vercel.json precisa publicar a pasta public");
+  assert(vercel.buildCommand === "npm run build", "vercel.json precisa usar npm run build");
+  assert(!vercel.functions, "vercel.json nao deve declarar functions para deploy estatico");
   assert(Array.isArray(vercel.rewrites), "vercel.json precisa de rewrites");
   const catchAllIndex = vercel.rewrites.findIndex((rewrite) => rewrite.source === "/(.*)");
   const apiIndex = vercel.rewrites.findIndex((rewrite) => rewrite.source === "/api/(.*)");
   assert(catchAllIndex >= 0, "vercel.json precisa manter fallback para index.html");
-  assert(apiIndex >= 0 && apiIndex < catchAllIndex, "rewrite de /api precisa vir antes do fallback SPA");
+  assert(apiIndex === -1, "vercel.json nao deve rotear /api no deploy estatico");
+}
+
+function checkNoServerlessEntrypoints() {
+  [
+    "index.js",
+    "server.js",
+    path.join("api", "index.js"),
+  ].forEach((file) => {
+    assert(!fs.existsSync(path.join(root, file)), `Entrypoint serverless proibido no deploy estatico: ${file}`);
+  });
+  assert(!fs.existsSync(path.join(root, "api")), "Pasta api/ nao deve existir na raiz; use local-api/ apenas para desenvolvimento local");
 }
 
 function checkPackage() {
@@ -127,35 +141,16 @@ function checkPackage() {
 
 [
   "index.html",
-  "server.js",
-  "server/app.js",
-  "server/config.js",
-  "server/repository.js",
-  "server/security.js",
-  "server/supabaseRepository.js",
   "lib/supabaseClient.js",
   "vercel.json",
 ].forEach(assertFile);
 
 [
-  "server.js",
-  "server/app.js",
-  "server/config.js",
-  "server/repository.js",
-  "server/security.js",
-  "server/transport.js",
-  "server/validation.js",
-  "server/supabaseRepository.js",
   "lib/supabaseClient.js",
   "enhancements.js",
-  "api/contact.js",
-  "api/newsletter.js",
-  "api/revendedores.js",
-  "api/analytics.js",
-  "api/products.js",
-  "api/sellers/states.js",
 ].forEach(checkSyntax);
 
+checkNoServerlessEntrypoints();
 checkPackage();
 checkVercelConfig();
 checkHtmlAssets();
@@ -163,4 +158,4 @@ buildStaticOutput();
 assertFile("public/index.html");
 assertFile("public/download/catalogo-regina.pdf");
 
-console.log("Build check concluido: sintaxe, assets, Vercel, Supabase e saida estatica OK.");
+console.log("Build check concluido: deploy estatico, assets, Vercel e Supabase OK.");

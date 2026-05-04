@@ -5,16 +5,7 @@
   "outputDirectory": "public",
   "installCommand": "npm ci --omit=dev",
   "buildCommand": "npm run build",
-  "functions": {
-    "api/**/*.js": {
-      "excludeFiles": "{.git/**,.vercel/**,assets/**,public/**,download/**,data/**,scripts/**,server/**,chrome-profile/**,chrome-profile-mobile/**,visual-report/**,node_modules/**,*.html,*.css,*.map,*.log,*.png,*.jpg,*.jpeg,*.webp,*.pdf,*.txt,*.ps1,index-*.js,config-*.js,enhancements.js,server.js,server.*.log,bg.*.log}"
-    }
-  },
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
-    },
     {
       "source": "/download/(.*)",
       "destination": "/download/$1"

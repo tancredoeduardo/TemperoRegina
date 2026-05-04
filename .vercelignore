@@ -1,7 +1,15 @@
 node_modules
 .git
-.env
-.env.local
+.env*
+logs
+uploads
+*.zip
+*.mp4
+api
+local-api
+server
+server.js
+local-server.js
 data
 chrome-profile*
 visual-report
