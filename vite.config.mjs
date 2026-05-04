@@ -9,6 +9,7 @@ const rootStaticFiles = [
   "hero-banner-mobile-final.png",
   "hero-banner-mobile.png",
   "hero-banner-updated.png",
+  "logo-icon.png",
   "restored-design.png",
   "yellow-pass-home.png",
 ];

@@ -1836,3 +1836,8 @@ body.rg-back-to-top-ready button[data-rg-back-to-top-duplicate="true"] {
   }
 
 }
+:where(#watermark, [id*="watermark"]) {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}

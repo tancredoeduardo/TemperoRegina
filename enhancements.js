@@ -910,9 +910,53 @@ const ORDER_BASE_MESSAGE = "Ola! Quero fazer um pedido com a equipe comercial da
     }
   }
 
-  function removePreviewArtifacts() {
-    document.querySelectorAll("#watermark, [id*='watermark']").forEach((node) => node.remove());
-    document.querySelectorAll('script[src*="posthog"], script[src*="readdy"]').forEach((node) => node.remove());
+  function findPreviewArtifactRoot(node) {
+    if (!(node instanceof Element)) return null;
+
+    if (node.matches("#watermark, [id*='watermark']")) {
+      return node;
+    }
+
+    const imageSource = node.getAttribute("src") || "";
+    if (node.tagName === "IMG" && imageSource.includes("watermark.png") && imageSource.includes("readdy")) {
+      return node.closest("#watermark, [id*='watermark'], div[style*='position: fixed']") || node;
+    }
+
+    const fixedParent = node.closest?.("div[style*='position: fixed']");
+    if (!fixedParent) return null;
+
+    const parentStyle = fixedParent.getAttribute("style") || "";
+    const hasPreviewImage = Boolean(fixedParent.querySelector('img[src*="watermark.png"][src*="readdy"]'));
+    const hasPreviewControls = Boolean(fixedParent.querySelector("#generate-button, #close-button"));
+
+    if (parentStyle.includes("2147483647") && (hasPreviewImage || hasPreviewControls)) {
+      return fixedParent;
+    }
+
+    return null;
+  }
+
+  function removePreviewArtifacts(root = document) {
+    const scope = root instanceof Document ? root : root?.ownerDocument || document;
+    const candidates = new Set([
+      ...scope.querySelectorAll("#watermark, [id*='watermark']"),
+      ...scope.querySelectorAll('img[src*="watermark.png"][src*="readdy"]'),
+      ...scope.querySelectorAll("#generate-button, #close-button"),
+    ]);
+
+    if (root instanceof Element) {
+      candidates.add(root);
+      root.querySelectorAll?.("#watermark, [id*='watermark'], img[src*='watermark.png'][src*='readdy'], #generate-button, #close-button").forEach((node) =>
+        candidates.add(node),
+      );
+    }
+
+    candidates.forEach((node) => {
+      const artifactRoot = findPreviewArtifactRoot(node);
+      artifactRoot?.remove();
+    });
+
+    scope.querySelectorAll('script[src*="posthog"], script[src*="readdy"]').forEach((node) => node.remove());
   }
 
   function enhanceHomeHeroBannerWhenReady(attempt = 0) {
@@ -1277,11 +1321,18 @@ const ORDER_BASE_MESSAGE = "Ola! Quero fazer um pedido com a equipe comercial da
     runEnhanceSafely();
   }
   new MutationObserver((mutations) => {
-    if (
-      mutations.some((mutation) =>
-        Array.from(mutation.addedNodes || []).some((node) => shouldObserveMutationNode(node)),
-      )
-    ) {
+    let shouldEnhance = false;
+
+    mutations.forEach((mutation) => {
+      Array.from(mutation.addedNodes || []).forEach((node) => {
+        removePreviewArtifacts(node);
+        if (shouldObserveMutationNode(node)) {
+          shouldEnhance = true;
+        }
+      });
+    });
+
+    if (shouldEnhance) {
       scheduleEnhance();
     }
   }).observe(document.documentElement, {
