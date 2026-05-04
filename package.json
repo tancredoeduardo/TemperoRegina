@@ -8,9 +8,11 @@
   },
   "scripts": {
     "build": "vite build",
+    "build:check": "node scripts/build-check.mjs",
     "check:supabase": "node scripts/check-supabase.mjs",
     "dev": "node local-server.js",
-    "test:visual": "node scripts/visual-test.mjs"
+    "test:visual": "node scripts/visual-test.mjs",
+    "verify": "npm run build && npm run build:check && npm run check:supabase && npm run test:visual"
   },
   "devDependencies": {
     "playwright": "^1.59.1",
