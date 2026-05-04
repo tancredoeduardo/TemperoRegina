@@ -64,6 +64,7 @@ const ALLOWED_ORIGINS = new Set([
 ].filter(Boolean));
 
 const ROUTE_FILES = {
+  "/admin": "index.html",
   "/catalogo-impressao": "catalogo-impressao.html",
   "/revendedores": "revendedores.html",
 };

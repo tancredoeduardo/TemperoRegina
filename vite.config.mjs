@@ -1,6 +1,6 @@
 import { copyFileSync, existsSync, mkdirSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 
 const staticDirectories = ["assets", "download"];
 const rootStaticFiles = [
@@ -50,24 +50,59 @@ function copyStaticAssets() {
   }
 }
 
-export default defineConfig({
-  publicDir: false,
-  envPrefix: ["VITE_", "NEXT_PUBLIC_"],
-  build: {
-    outDir: "dist",
-    emptyOutDir: true,
-    rollupOptions: {
-      input: {
-        main: "index.html",
-        catalogo: "catalogo-impressao.html",
-        revendedores: "revendedores.html",
+function getEnvValue(env, names) {
+  for (const name of names) {
+    const value = env[name];
+    if (value) return value;
+  }
+  return "";
+}
+
+function createHtmlEnvPlugin(env) {
+  const replacements = {
+    "%NEXT_PUBLIC_SUPABASE_URL%": getEnvValue(env, ["NEXT_PUBLIC_SUPABASE_URL", "VITE_SUPABASE_URL"]),
+    "%NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY%": getEnvValue(env, [
+      "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+      "VITE_SUPABASE_PUBLISHABLE_KEY",
+    ]),
+    "%NEXT_PUBLIC_ADMIN_ACCESS_KEY%": getEnvValue(env, ["NEXT_PUBLIC_ADMIN_ACCESS_KEY", "VITE_ADMIN_ACCESS_KEY"]),
+  };
+
+  return {
+    name: "regina-html-env",
+    transformIndexHtml(html) {
+      return Object.entries(replacements).reduce(
+        (content, [placeholder, value]) => content.replaceAll(placeholder, value),
+        html
+      );
+    },
+  };
+}
+
+function createStaticAssetsPlugin() {
+  return {
+    name: "regina-static-assets",
+    closeBundle: copyStaticAssets,
+  };
+}
+
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
+
+  return {
+    publicDir: false,
+    envPrefix: ["VITE_", "NEXT_PUBLIC_"],
+    build: {
+      outDir: "dist",
+      emptyOutDir: true,
+      rollupOptions: {
+        input: {
+          main: "index.html",
+          catalogo: "catalogo-impressao.html",
+          revendedores: "revendedores.html",
+        },
       },
     },
-  },
-  plugins: [
-    {
-      name: "regina-static-assets",
-      closeBundle: copyStaticAssets,
-    },
-  ],
+    plugins: [createHtmlEnvPlugin(env), createStaticAssetsPlugin()],
+  };
 });

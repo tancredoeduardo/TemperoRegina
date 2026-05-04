@@ -3,6 +3,29 @@ const path = require("node:path");
 const { BODY_LIMIT_BYTES, MIME_TYPES, root, ALLOWED_STATIC_ROOTS, DENIED_PATH_PATTERNS } = require("./config");
 const { securityHeaders } = require("./security");
 
+const HTML_ENV_PLACEHOLDERS = {
+  "%NEXT_PUBLIC_SUPABASE_URL%": ["NEXT_PUBLIC_SUPABASE_URL", "VITE_SUPABASE_URL"],
+  "%NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY%": [
+    "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+    "VITE_SUPABASE_PUBLISHABLE_KEY",
+  ],
+  "%NEXT_PUBLIC_ADMIN_ACCESS_KEY%": ["NEXT_PUBLIC_ADMIN_ACCESS_KEY", "VITE_ADMIN_ACCESS_KEY"],
+};
+
+function getRuntimeEnvValue(names) {
+  for (const name of names) {
+    if (process.env[name]) return process.env[name];
+  }
+  return "";
+}
+
+function applyRuntimeHtmlEnv(html) {
+  return Object.entries(HTML_ENV_PLACEHOLDERS).reduce(
+    (content, [placeholder, names]) => content.replaceAll(placeholder, getRuntimeEnvValue(names)),
+    html,
+  );
+}
+
 function parseBody(req) {
   return new Promise((resolve, reject) => {
     let raw = "";
@@ -85,6 +108,12 @@ function streamFile(res, filePath, method = "GET") {
     res.end();
     return;
   }
+
+  if (ext === ".html") {
+    res.end(applyRuntimeHtmlEnv(fs.readFileSync(filePath, "utf8")));
+    return;
+  }
+
   fs.createReadStream(filePath).pipe(res);
 }
 

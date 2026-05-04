@@ -103,6 +103,8 @@ const CONTACT_MAP_LINK = `https://www.google.com/maps/dir/?api=1&destination=${e
   let enhanceTimer = 0;
   let isEnhancing = false;
   let pendingEnhance = false;
+  let adminRouteRetryTimer = 0;
+  let adminRouteRetryCount = 0;
   let mirroredAssetMap = null;
   let mirroredAssetMapLoading = false;
 
@@ -250,6 +252,10 @@ const CONTACT_MAP_LINK = `https://www.google.com/maps/dir/?api=1&destination=${e
     return ["localhost", "127.0.0.1", "::1"].includes(location.hostname);
   }
 
+  function hasEnvPlaceholder(value) {
+    return /%[A-Z0-9_]+%/i.test(String(value || ""));
+  }
+
   function getBrowserSupabaseConfig() {
     const source = window.REGINA_SUPABASE_CONFIG || {};
     const url = String(source.url || "").trim().replace(/\/+$/, "");
@@ -257,14 +263,13 @@ const CONTACT_MAP_LINK = `https://www.google.com/maps/dir/?api=1&destination=${e
     const table = String(source.submissionsTable || "site_submissions").trim() || "site_submissions";
     const adminAccessKey = String(source.adminAccessKey || "").trim();
 
-    if (!url || !key || url.includes("%NEXT_PUBLIC_") || key.includes("%NEXT_PUBLIC_")) return null;
+    if (!url || !key || hasEnvPlaceholder(url) || hasEnvPlaceholder(key)) return null;
     if (!/^https:\/\/.+\.supabase\.co$/i.test(url)) return null;
     return {
       url,
       key,
       table,
-      adminAccessKey:
-        !adminAccessKey || adminAccessKey.includes("%NEXT_PUBLIC_") ? "" : adminAccessKey,
+      adminAccessKey: !adminAccessKey || hasEnvPlaceholder(adminAccessKey) ? "" : adminAccessKey,
     };
   }
 
@@ -434,15 +439,65 @@ const CONTACT_MAP_LINK = `https://www.google.com/maps/dir/?api=1&destination=${e
     }
   }
 
+  function clearAdminRouteRetry() {
+    if (adminRouteRetryTimer) {
+      window.clearTimeout(adminRouteRetryTimer);
+      adminRouteRetryTimer = 0;
+    }
+    adminRouteRetryCount = 0;
+  }
+
+  function scheduleAdminRouteRetry() {
+    if (location.pathname !== "/admin") {
+      clearAdminRouteRetry();
+      return;
+    }
+
+    if (adminRouteRetryTimer || adminRouteRetryCount >= 8) return;
+
+    const delay = adminRouteRetryCount < 3 ? 120 : 350;
+    adminRouteRetryTimer = window.setTimeout(() => {
+      adminRouteRetryTimer = 0;
+      adminRouteRetryCount += 1;
+
+      const root = document.getElementById("root");
+      const hasAdminPage = Boolean(root?.querySelector(".rg-admin-page"));
+
+      if (location.pathname !== "/admin") {
+        clearAdminRouteRetry();
+        return;
+      }
+
+      if (root && !hasAdminPage) {
+        delete root.dataset.rgAdminReady;
+        renderAdminRoute();
+        return;
+      }
+
+      if (adminRouteRetryCount < 8) {
+        scheduleAdminRouteRetry();
+      }
+    }, delay);
+  }
+
   function renderAdminRoute() {
     if (location.pathname !== "/admin") {
       document.body.classList.remove("rg-admin-body");
+      clearAdminRouteRetry();
       return false;
     }
 
     const root = document.getElementById("root");
-    if (!root) return true;
-    if (root.dataset.rgAdminReady === "true") return true;
+    if (!root) {
+      scheduleAdminRouteRetry();
+      return true;
+    }
+
+    const hasAdminPage = Boolean(root.querySelector(".rg-admin-page"));
+    if (root.dataset.rgAdminReady === "true" && hasAdminPage) {
+      scheduleAdminRouteRetry();
+      return true;
+    }
 
     root.dataset.rgAdminReady = "true";
     document.body.classList.add("rg-admin-body");
@@ -464,11 +519,19 @@ const CONTACT_MAP_LINK = `https://www.google.com/maps/dir/?api=1&destination=${e
           </div>
 
           <div class="rg-admin-login rg-admin-card" data-admin-login>
-            <h2>Acesso restrito</h2>
-            <p>Digite a senha configurada em <strong>NEXT_PUBLIC_ADMIN_ACCESS_KEY</strong>.</p>
+            <div class="rg-admin-login-copy">
+              <span class="rg-admin-kicker">Acesso restrito</span>
+              <h2>Entrar no painel</h2>
+              <p>Use a senha configurada em <strong>NEXT_PUBLIC_ADMIN_ACCESS_KEY</strong> para consultar os leads salvos no Supabase.</p>
+              <div class="rg-admin-config-note">
+                <strong>Ambiente seguro</strong>
+                <span>Somente variaveis publicas sao carregadas no navegador.</span>
+              </div>
+            </div>
             <form data-admin-login-form>
-              <input type="password" name="password" autocomplete="current-password" placeholder="Senha admin" required />
-              <button type="submit">Entrar</button>
+              <label for="admin-password">Senha admin</label>
+              <input id="admin-password" type="password" name="password" autocomplete="current-password" placeholder="Digite sua senha" required />
+              <button type="submit">Entrar no painel</button>
             </form>
             <div class="rg-admin-state" data-admin-login-state></div>
           </div>
@@ -514,6 +577,7 @@ const CONTACT_MAP_LINK = `https://www.google.com/maps/dir/?api=1&destination=${e
     `;
 
     setupAdminPanel(root);
+    scheduleAdminRouteRetry();
     return true;
   }
 
@@ -740,6 +804,12 @@ const CONTACT_MAP_LINK = `https://www.google.com/maps/dir/?api=1&destination=${e
   function onRouteChange() {
     applySeo();
     postAnalytics("page_view");
+    if (location.pathname === "/admin") {
+      adminRouteRetryCount = 0;
+      renderAdminRoute();
+      return;
+    }
+    clearAdminRouteRetry();
     scheduleEnhance(140);
   }
 
