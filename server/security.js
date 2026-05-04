@@ -73,6 +73,7 @@ function securityHeaders(contentType) {
     "font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com",
     "script-src 'self' 'unsafe-inline'",
     "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
+    "frame-src 'self' https://www.google.com https://maps.google.com",
     "frame-ancestors 'none'",
     "base-uri 'self'",
     "form-action 'self'",
