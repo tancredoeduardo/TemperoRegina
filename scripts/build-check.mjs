@@ -3,6 +3,10 @@ import path from "node:path";
 import { spawnSync } from "node:child_process";
 
 const root = process.cwd();
+const publicDir = path.join(root, "public");
+const rootStaticExtensions = new Set([".html", ".css", ".png", ".jpg", ".jpeg", ".webp", ".svg", ".ico"]);
+const rootStaticJsPatterns = [/^index-[\w-]+\.js$/, /^config-[\w-]+\.js$/, /^enhancements\.js$/];
+const staticDirectories = ["assets", "download"];
 
 function readJson(file) {
   return JSON.parse(fs.readFileSync(path.join(root, file), "utf8"));
@@ -14,6 +18,57 @@ function assert(condition, message) {
 
 function assertFile(file) {
   assert(fs.existsSync(path.join(root, file)), `Arquivo obrigatorio ausente: ${file}`);
+}
+
+function copyFileToPublic(file) {
+  const source = path.join(root, file);
+  const target = path.join(publicDir, file);
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.copyFileSync(source, target);
+}
+
+function copyDirectoryToPublic(directory) {
+  const sourceDir = path.join(root, directory);
+  if (!fs.existsSync(sourceDir)) return;
+
+  for (const entry of fs.readdirSync(sourceDir, { withFileTypes: true })) {
+    const relativePath = path.join(directory, entry.name);
+    const sourcePath = path.join(root, relativePath);
+    const targetPath = path.join(publicDir, relativePath);
+
+    if (entry.isDirectory()) {
+      fs.mkdirSync(targetPath, { recursive: true });
+      copyDirectoryToPublic(relativePath);
+      continue;
+    }
+
+    if (entry.isFile()) {
+      fs.mkdirSync(path.dirname(targetPath), { recursive: true });
+      fs.copyFileSync(sourcePath, targetPath);
+    }
+  }
+}
+
+function shouldCopyRootStaticFile(file) {
+  const extension = path.extname(file);
+  if (rootStaticExtensions.has(extension)) return true;
+  return rootStaticJsPatterns.some((pattern) => pattern.test(file));
+}
+
+function buildStaticOutput() {
+  fs.rmSync(publicDir, { recursive: true, force: true });
+  fs.mkdirSync(publicDir, { recursive: true });
+
+  for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
+    if (!entry.isFile()) continue;
+    if (shouldCopyRootStaticFile(entry.name)) {
+      copyFileToPublic(entry.name);
+    }
+  }
+
+  for (const directory of staticDirectories) {
+    copyDirectoryToPublic(directory);
+  }
 }
 
 function checkSyntax(file) {
@@ -56,6 +111,7 @@ function checkHtmlAssets() {
 
 function checkVercelConfig() {
   const vercel = readJson("vercel.json");
+  assert(vercel.outputDirectory === "public", "vercel.json precisa publicar a pasta public");
   assert(Array.isArray(vercel.rewrites), "vercel.json precisa de rewrites");
   const catchAllIndex = vercel.rewrites.findIndex((rewrite) => rewrite.source === "/(.*)");
   const apiIndex = vercel.rewrites.findIndex((rewrite) => rewrite.source === "/api/(.*)");
@@ -94,6 +150,7 @@ function checkPackage() {
   "enhancements.js",
   "api/contact.js",
   "api/newsletter.js",
+  "api/index.js",
   "api/revendedores.js",
   "api/analytics.js",
   "api/products.js",
@@ -103,5 +160,8 @@ function checkPackage() {
 checkPackage();
 checkVercelConfig();
 checkHtmlAssets();
+buildStaticOutput();
+assertFile("public/index.html");
+assertFile("public/download/catalogo-regina.pdf");
 
-console.log("Build check concluido: sintaxe, assets, Vercel e Supabase OK.");
+console.log("Build check concluido: sintaxe, assets, Vercel, Supabase e saida estatica OK.");

@@ -2,6 +2,7 @@
   "version": 2,
   "cleanUrls": true,
   "trailingSlash": false,
+  "outputDirectory": "public",
   "installCommand": "npm ci --omit=dev",
   "buildCommand": "npm run build",
   "functions": {
