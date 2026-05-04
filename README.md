@@ -24,7 +24,7 @@ Analise de paginas, funcionalidades, design e melhorias: `ANALISE-MELHORIAS.md`
 ## Rodar
 
 ```bash
-node server.js
+npm run dev
 ```
 
 Depois abra:
@@ -47,12 +47,22 @@ Use `.env.example` como base para configurar:
 
 - `NEXT_PUBLIC_SUPABASE_URL`: URL publica do projeto Supabase
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`: chave publica recomendada do projeto Supabase
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: fallback legado, caso ainda esteja usando anon key
 - `SUPABASE_SUBMISSIONS_TABLE`: tabela usada para contatos, newsletter, revendedores e analytics
 - `CRM_WEBHOOK_URL`: recebe `contact`, `newsletter` e `revendedores`
 - `ANALYTICS_WEBHOOK_URL`: recebe eventos de analytics
 
 Sem esses valores, o sistema continua funcionando com persistencia local em `data/*.jsonl`.
+
+### Variaveis na Vercel
+
+Configure somente estas variaveis publicas no projeto da Vercel:
+
+```text
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+```
+
+Nao adicione `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_SECRET_KEY`, `SUPABASE_JWT_SECRET`, `POSTGRES_PASSWORD` ou `DATABASE_URL` no frontend. Essas chaves sao privadas e devem existir apenas em backend seguro.
 
 ## Supabase
 

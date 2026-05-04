@@ -52,6 +52,11 @@
       description:
         "Eventos, feiras e ações comerciais com participação da Tempero Regina.",
     },
+    "/admin": {
+      title: "Admin - Leads Tempero Regina",
+      description:
+        "Painel administrativo para consulta de leads da Tempero Regina.",
+    },
   };
 
   const REGION_STATES = {
@@ -90,8 +95,10 @@ const CONTACT_MAP_COORDS = "-5.187654321098765,-37.34456789012345";
 const CONTACT_MAP_QUERY = encodeURIComponent(`${CONTACT_MAP_LABEL}, ${CONTACT_ADDRESS}`);
 const CONTACT_MAP_EMBED_URL = `https://maps.google.com/maps?hl=pt-BR&q=${CONTACT_MAP_QUERY}&z=16&output=embed`;
 const CONTACT_MAP_LINK = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(CONTACT_MAP_COORDS)}`;
-const ORDER_WHATSAPP_PHONE = "558433161600";
-const ORDER_BASE_MESSAGE = "Ola! Quero fazer um pedido com a equipe comercial da Tempero Regina.";
+  const ORDER_WHATSAPP_PHONE = "558433161600";
+  const ORDER_BASE_MESSAGE = "Ola! Quero fazer um pedido com a equipe comercial da Tempero Regina.";
+  const ADMIN_SESSION_KEY = "regina_admin_unlocked";
+  const ADMIN_LEAD_LIMIT = 300;
   const ENHANCE_DEBOUNCE_MS = 120;
   let enhanceTimer = 0;
   let isEnhancing = false;
@@ -239,24 +246,447 @@ const ORDER_BASE_MESSAGE = "Ola! Quero fazer um pedido com a equipe comercial da
     return true;
   }
 
+  function isLocalRuntime() {
+    return ["localhost", "127.0.0.1", "::1"].includes(location.hostname);
+  }
+
+  function getBrowserSupabaseConfig() {
+    const source = window.REGINA_SUPABASE_CONFIG || {};
+    const url = String(source.url || "").trim().replace(/\/+$/, "");
+    const key = String(source.publishableKey || source.anonKey || "").trim();
+    const table = String(source.submissionsTable || "site_submissions").trim() || "site_submissions";
+    const adminAccessKey = String(source.adminAccessKey || "").trim();
+
+    if (!url || !key || url.includes("%NEXT_PUBLIC_") || key.includes("%NEXT_PUBLIC_")) return null;
+    if (!/^https:\/\/.+\.supabase\.co$/i.test(url)) return null;
+    return {
+      url,
+      key,
+      table,
+      adminAccessKey:
+        !adminAccessKey || adminAccessKey.includes("%NEXT_PUBLIC_") ? "" : adminAccessKey,
+    };
+  }
+
+  function createSubmissionId() {
+    if (window.crypto && typeof window.crypto.randomUUID === "function") {
+      return window.crypto.randomUUID();
+    }
+    return `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+  }
+
+  async function submitToSupabase(kind, payload) {
+    const config = getBrowserSupabaseConfig();
+    if (!config) return { ok: false, reason: "missing-config" };
+
+    const row = {
+      id: createSubmissionId(),
+      kind,
+      created_at: new Date().toISOString(),
+      user_agent: navigator.userAgent,
+      payload,
+    };
+
+    const response = await fetch(`${config.url}/rest/v1/${encodeURIComponent(config.table)}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: config.key,
+        Authorization: `Bearer ${config.key}`,
+        Prefer: "return=minimal",
+      },
+      body: JSON.stringify(row),
+    });
+
+    if (!response.ok) {
+      const message = await response.text().catch(() => "");
+      throw new Error(message || `Supabase retornou ${response.status}`);
+    }
+
+    return { ok: true };
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function formatAdminDate(value) {
+    if (!value) return "-";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "-";
+    return new Intl.DateTimeFormat("pt-BR", {
+      dateStyle: "short",
+      timeStyle: "short",
+    }).format(date);
+  }
+
+  function getLeadPayload(lead) {
+    return lead?.payload && typeof lead.payload === "object" ? lead.payload : {};
+  }
+
+  function pickPayloadValue(payload, keys) {
+    for (const key of keys) {
+      const value = payload[key];
+      if (value !== undefined && value !== null && String(value).trim()) {
+        return String(value).trim();
+      }
+    }
+    return "";
+  }
+
+  function getLeadName(lead) {
+    const payload = getLeadPayload(lead);
+    return (
+      pickPayloadValue(payload, ["name", "nome", "fullName", "empresa", "company"]) ||
+      pickPayloadValue(lead, ["name", "nome"]) ||
+      "Sem nome"
+    );
+  }
+
+  function getLeadEmail(lead) {
+    const payload = getLeadPayload(lead);
+    return pickPayloadValue(payload, ["email", "emailAddress", "e_mail"]) || pickPayloadValue(lead, ["email"]);
+  }
+
+  function getLeadPhone(lead) {
+    const payload = getLeadPayload(lead);
+    return pickPayloadValue(payload, ["phone", "telefone", "whatsapp", "celular"]);
+  }
+
+  function getLeadMessage(lead) {
+    const payload = getLeadPayload(lead);
+    const message = pickPayloadValue(payload, [
+      "message",
+      "mensagem",
+      "assunto",
+      "cidade",
+      "estado",
+      "segmento",
+    ]);
+    if (message) return message;
+
+    const ignored = new Set(["name", "nome", "fullName", "empresa", "company", "email", "emailAddress", "e_mail", "phone", "telefone", "whatsapp", "celular"]);
+    const summary = Object.entries(payload)
+      .filter(([key, value]) => !ignored.has(key) && value !== undefined && value !== null && String(value).trim())
+      .slice(0, 4)
+      .map(([key, value]) => `${key}: ${String(value).trim()}`)
+      .join(" | ");
+    return summary || "-";
+  }
+
+  function getLeadSearchText(lead) {
+    return [
+      getLeadName(lead),
+      getLeadEmail(lead),
+      getLeadPhone(lead),
+      getLeadMessage(lead),
+      lead?.kind,
+      lead?.created_at,
+    ]
+      .join(" ")
+      .toLowerCase();
+  }
+
+  async function fetchAdminLeads() {
+    const config = getBrowserSupabaseConfig();
+    if (!config) throw new Error("Supabase nao configurado.");
+
+    const select = "id,kind,created_at,user_agent,payload";
+    const url = `${config.url}/rest/v1/${encodeURIComponent(config.table)}?select=${encodeURIComponent(select)}&order=created_at.desc&limit=${ADMIN_LEAD_LIMIT}`;
+    const response = await fetch(url, {
+      headers: {
+        apikey: config.key,
+        Authorization: `Bearer ${config.key}`,
+        Accept: "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const message = await response.text().catch(() => "");
+      throw new Error(message || "Nao foi possivel carregar os leads.");
+    }
+
+    return response.json();
+  }
+
+  async function deleteAdminLead(id) {
+    const config = getBrowserSupabaseConfig();
+    if (!config) throw new Error("Supabase nao configurado.");
+
+    const url = `${config.url}/rest/v1/${encodeURIComponent(config.table)}?id=eq.${encodeURIComponent(id)}`;
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        apikey: config.key,
+        Authorization: `Bearer ${config.key}`,
+        Prefer: "return=minimal",
+      },
+    });
+
+    if (!response.ok) {
+      const message = await response.text().catch(() => "");
+      throw new Error(message || "Nao foi possivel deletar o lead.");
+    }
+  }
+
+  function renderAdminRoute() {
+    if (location.pathname !== "/admin") {
+      document.body.classList.remove("rg-admin-body");
+      return false;
+    }
+
+    const root = document.getElementById("root");
+    if (!root) return true;
+    if (root.dataset.rgAdminReady === "true") return true;
+
+    root.dataset.rgAdminReady = "true";
+    document.body.classList.add("rg-admin-body");
+    document.title = routeMeta["/admin"].title;
+    root.innerHTML = `
+      <main class="rg-admin-page">
+        <header class="rg-admin-header">
+          <a class="rg-admin-logo" href="/" aria-label="Voltar para o site">
+            <img src="/assets/remote/logo-34d4ad8b213f.png" alt="Tempero Regina" />
+          </a>
+          <a class="rg-admin-back" href="/">Voltar ao site</a>
+        </header>
+
+        <section class="rg-admin-shell" aria-labelledby="admin-title">
+          <div class="rg-admin-hero">
+            <p>Painel administrativo</p>
+            <h1 id="admin-title">Leads do site</h1>
+            <span>Consulte, filtre e organize os contatos recebidos pela Tempero Regina.</span>
+          </div>
+
+          <div class="rg-admin-login rg-admin-card" data-admin-login>
+            <h2>Acesso restrito</h2>
+            <p>Digite a senha configurada em <strong>NEXT_PUBLIC_ADMIN_ACCESS_KEY</strong>.</p>
+            <form data-admin-login-form>
+              <input type="password" name="password" autocomplete="current-password" placeholder="Senha admin" required />
+              <button type="submit">Entrar</button>
+            </form>
+            <div class="rg-admin-state" data-admin-login-state></div>
+          </div>
+
+          <div class="rg-admin-dashboard" data-admin-dashboard hidden>
+            <div class="rg-admin-toolbar rg-admin-card">
+              <div>
+                <strong data-admin-count>0 leads</strong>
+                <span>Ordenados por data mais recente</span>
+              </div>
+              <div class="rg-admin-actions">
+                <button type="button" data-admin-refresh>Atualizar</button>
+                <button type="button" data-admin-logout>Sair</button>
+              </div>
+            </div>
+
+            <label class="rg-admin-search">
+              <span>Buscar por nome, e-mail ou mensagem</span>
+              <input type="search" data-admin-search placeholder="Buscar leads..." />
+            </label>
+
+            <div class="rg-admin-stats" data-admin-stats></div>
+
+            <div class="rg-admin-table-wrap rg-admin-card">
+              <table class="rg-admin-table">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Contato</th>
+                    <th>Tipo</th>
+                    <th>Mensagem</th>
+                    <th>Data</th>
+                    <th>Ação</th>
+                  </tr>
+                </thead>
+                <tbody data-admin-table></tbody>
+              </table>
+              <div class="rg-admin-empty" data-admin-empty hidden>Nenhum lead encontrado.</div>
+            </div>
+          </div>
+        </section>
+      </main>
+    `;
+
+    setupAdminPanel(root);
+    return true;
+  }
+
+  function setupAdminPanel(root) {
+    const config = getBrowserSupabaseConfig();
+    const login = root.querySelector("[data-admin-login]");
+    const dashboard = root.querySelector("[data-admin-dashboard]");
+    const loginForm = root.querySelector("[data-admin-login-form]");
+    const loginState = root.querySelector("[data-admin-login-state]");
+    const table = root.querySelector("[data-admin-table]");
+    const empty = root.querySelector("[data-admin-empty]");
+    const searchInput = root.querySelector("[data-admin-search]");
+    const countNode = root.querySelector("[data-admin-count]");
+    const statsNode = root.querySelector("[data-admin-stats]");
+    const refreshButton = root.querySelector("[data-admin-refresh]");
+    const logoutButton = root.querySelector("[data-admin-logout]");
+    let leads = [];
+    let search = "";
+
+    function setLoginMessage(message, isError = true) {
+      if (!loginState) return;
+      loginState.textContent = message || "";
+      loginState.classList.toggle("is-error", Boolean(isError));
+    }
+
+    function showLogin() {
+      login.hidden = false;
+      dashboard.hidden = true;
+    }
+
+    function showDashboard() {
+      login.hidden = true;
+      dashboard.hidden = false;
+      loadLeads();
+    }
+
+    function renderRows() {
+      const filtered = leads.filter((lead) => getLeadSearchText(lead).includes(search));
+      table.innerHTML = filtered
+        .map((lead) => {
+          const email = getLeadEmail(lead);
+          const phone = getLeadPhone(lead);
+          return `
+            <tr>
+              <td><strong>${escapeHtml(getLeadName(lead))}</strong></td>
+              <td>
+                ${email ? `<a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a>` : "<span>-</span>"}
+                ${phone ? `<small>${escapeHtml(phone)}</small>` : ""}
+              </td>
+              <td><span class="rg-admin-badge">${escapeHtml(lead.kind || "lead")}</span></td>
+              <td>${escapeHtml(getLeadMessage(lead))}</td>
+              <td>${escapeHtml(formatAdminDate(lead.created_at))}</td>
+              <td><button class="rg-admin-danger" type="button" data-admin-delete="${escapeHtml(lead.id)}">Deletar</button></td>
+            </tr>
+          `;
+        })
+        .join("");
+
+      empty.hidden = filtered.length > 0;
+      countNode.textContent = `${filtered.length} lead${filtered.length === 1 ? "" : "s"}`;
+
+      const byKind = leads.reduce((acc, lead) => {
+        const key = lead.kind || "lead";
+        acc[key] = (acc[key] || 0) + 1;
+        return acc;
+      }, {});
+      statsNode.innerHTML = Object.entries(byKind)
+        .map(([kind, total]) => `<span><strong>${total}</strong>${escapeHtml(kind)}</span>`)
+        .join("");
+    }
+
+    async function loadLeads() {
+      table.innerHTML = `<tr><td colspan="6">Carregando leads...</td></tr>`;
+      empty.hidden = true;
+      try {
+        leads = await fetchAdminLeads();
+        renderRows();
+      } catch (error) {
+        table.innerHTML = `<tr><td colspan="6">${escapeHtml(error.message || "Erro ao carregar leads.")}</td></tr>`;
+      }
+    }
+
+    if (!config) {
+      setLoginMessage("Configure NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY para usar o painel.");
+      return;
+    }
+
+    if (!config.adminAccessKey) {
+      setLoginMessage("Configure NEXT_PUBLIC_ADMIN_ACCESS_KEY para liberar o acesso ao painel.");
+      return;
+    }
+
+    if (sessionStorage.getItem(ADMIN_SESSION_KEY) === "true") {
+      showDashboard();
+    } else {
+      showLogin();
+    }
+
+    loginForm?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const password = String(new FormData(loginForm).get("password") || "");
+      if (password !== config.adminAccessKey) {
+        setLoginMessage("Senha invalida.");
+        return;
+      }
+      sessionStorage.setItem(ADMIN_SESSION_KEY, "true");
+      setLoginMessage("", false);
+      showDashboard();
+    });
+
+    searchInput?.addEventListener("input", () => {
+      search = searchInput.value.trim().toLowerCase();
+      renderRows();
+    });
+
+    refreshButton?.addEventListener("click", loadLeads);
+    logoutButton?.addEventListener("click", () => {
+      sessionStorage.removeItem(ADMIN_SESSION_KEY);
+      showLogin();
+    });
+
+    table?.addEventListener("click", async (event) => {
+      const button = event.target.closest("[data-admin-delete]");
+      if (!button) return;
+      const id = button.getAttribute("data-admin-delete");
+      if (!id || !confirm("Deletar este lead?")) return;
+      button.disabled = true;
+      button.textContent = "Deletando...";
+      try {
+        await deleteAdminLead(id);
+        leads = leads.filter((lead) => lead.id !== id);
+        renderRows();
+      } catch (error) {
+        alert(error.message || "Nao foi possivel deletar o lead.");
+        button.disabled = false;
+        button.textContent = "Deletar";
+      }
+    });
+  }
+
+  function postLocalApi(endpoint, payload, options = {}) {
+    return fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      keepalive: Boolean(options.keepalive),
+    });
+  }
+
   function postAnalytics(event, payload) {
-    const body = JSON.stringify({
+    const analyticsPayload = {
       event,
       payload: payload || {},
       path: location.pathname,
       ts: new Date().toISOString(),
-    });
+    };
+
+    if (getBrowserSupabaseConfig()) {
+      submitToSupabase("analytics", analyticsPayload).catch((error) => {
+        console.debug("analytics supabase indisponível", error);
+      });
+      return;
+    }
+
+    if (!isLocalRuntime()) return;
+
+    const body = JSON.stringify(analyticsPayload);
     try {
       if (navigator.sendBeacon) {
         navigator.sendBeacon("/api/analytics", new Blob([body], { type: "application/json" }));
         return;
       }
-      fetch("/api/analytics", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body,
-        keepalive: true,
-      });
+      postLocalApi("/api/analytics", analyticsPayload, { keepalive: true });
     } catch (error) {
       console.debug("analytics local indisponível", error);
     }
@@ -388,6 +818,22 @@ const ORDER_BASE_MESSAGE = "Ola! Quero fazer um pedido com a equipe comercial da
         : "/api/newsletter";
     }
 
+    function resolveSubmissionKind(data) {
+      return data.mensagem || data.assunto || data.telefone ? "contact" : "newsletter";
+    }
+
+    async function submitFormData(kind, endpoint, data) {
+      if (getBrowserSupabaseConfig()) {
+        return submitToSupabase(kind, data);
+      }
+      if (!isLocalRuntime()) {
+        throw new Error("Supabase não configurado para receber o formulário.");
+      }
+      const response = await postLocalApi(endpoint, data);
+      if (!response.ok) throw new Error("Falha ao enviar");
+      return { ok: true };
+    }
+
     function resolveSuccessMessage(endpoint) {
       return endpoint === "/api/newsletter"
         ? "Cadastro realizado com sucesso. Você receberá nossas novidades em breve."
@@ -407,6 +853,7 @@ const ORDER_BASE_MESSAGE = "Ola! Quero fazer um pedido com a equipe comercial da
         const rawData = Object.fromEntries(new FormData(form).entries());
         const data = sanitizeFormPayload(rawData);
         const endpoint = resolveFormEndpoint(data);
+        const kind = resolveSubmissionKind(data);
         if (button) {
           button.disabled = true;
           button.textContent = "Enviando...";
@@ -414,20 +861,15 @@ const ORDER_BASE_MESSAGE = "Ola! Quero fazer um pedido com a equipe comercial da
         form.setAttribute("aria-busy", "true");
         form.classList.remove("form-error", "form-success");
         try {
-          const response = await fetch(endpoint, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-          });
-          if (!response.ok) throw new Error("Falha ao enviar");
+          await submitFormData(kind, endpoint, data);
           form.reset();
           form.classList.add("form-success");
           showFormMessage(form, resolveSuccessMessage(endpoint), "success");
-          postAnalytics("form_submit_success", { endpoint });
+          postAnalytics("form_submit_success", { endpoint, kind });
         } catch (error) {
           form.classList.add("form-error");
           showFormMessage(form, "Não foi possível enviar agora. Tente novamente em instantes.", "error");
-          postAnalytics("form_submit_error", { endpoint, message: error.message });
+          postAnalytics("form_submit_error", { endpoint, kind, message: error.message });
         } finally {
           form.setAttribute("aria-busy", "false");
           if (button) {
@@ -971,6 +1413,7 @@ const ORDER_BASE_MESSAGE = "Ola! Quero fazer um pedido com a equipe comercial da
   }
 
   function enhanceDom() {
+    if (renderAdminRoute()) return;
     removePreviewArtifacts();
     decodeBrokenText(document.body);
     enhanceForms();
