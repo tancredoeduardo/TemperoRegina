@@ -97,9 +97,30 @@ const CONTACT_MAP_EMBED_URL = `https://maps.google.com/maps?hl=pt-BR&q=${CONTACT
 const CONTACT_MAP_LINK = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(CONTACT_MAP_COORDS)}`;
   const ORDER_WHATSAPP_PHONE = "558433161600";
   const ORDER_BASE_MESSAGE = "Ola! Quero fazer um pedido com a equipe comercial da Tempero Regina.";
-  const ADMIN_SESSION_KEY = "regina_admin_unlocked";
-  const ADMIN_LEAD_LIMIT = 300;
-  const ENHANCE_DEBOUNCE_MS = 120;
+const ADMIN_SESSION_KEY = "regina_admin_unlocked";
+const ADMIN_LEAD_LIMIT = 300;
+const ADMIN_CONTENT_STORAGE_KEY = "regina_admin_content_drafts";
+const ADMIN_MODULES = [
+  {
+    id: "produtos",
+    title: "Produtos",
+    singular: "produto",
+    description: "Organize destaques, lancamentos e ajustes que entram no catalogo.",
+  },
+  {
+    id: "receitas",
+    title: "Receitas",
+    singular: "receita",
+    description: "Planeje receitas, chamadas e pautas para publicacao no site.",
+  },
+  {
+    id: "eventos",
+    title: "Eventos",
+    singular: "evento",
+    description: "Acompanhe eventos, feiras e ativacoes comerciais da marca.",
+  },
+];
+const ENHANCE_DEBOUNCE_MS = 120;
   let enhanceTimer = 0;
   let isEnhancing = false;
   let pendingEnhance = false;
@@ -384,18 +405,109 @@ const CONTACT_MAP_LINK = `https://www.google.com/maps/dir/?api=1&destination=${e
     return summary || "-";
   }
 
-  function getLeadSearchText(lead) {
-    return [
-      getLeadName(lead),
-      getLeadEmail(lead),
-      getLeadPhone(lead),
+function getLeadSearchText(lead) {
+  return [
+    getLeadName(lead),
+    getLeadEmail(lead),
+    getLeadPhone(lead),
       getLeadMessage(lead),
       lead?.kind,
       lead?.created_at,
     ]
-      .join(" ")
-      .toLowerCase();
-  }
+    .join(" ")
+    .toLowerCase();
+}
+
+function isAnalyticsSubmission(lead) {
+  const payload = getLeadPayload(lead);
+  const kind = String(lead?.kind || payload.kind || "").toLowerCase();
+  const eventName = String(payload.event || "").toLowerCase();
+  const path = String(payload.path || "").toLowerCase();
+  const rawMessage = String(getLeadMessage(lead) || "").toLowerCase();
+  const hasContactInfo = Boolean(
+    getLeadEmail(lead) ||
+      getLeadPhone(lead) ||
+      pickPayloadValue(payload, ["name", "nome", "fullName", "empresa", "company"])
+  );
+
+  return (
+    kind === "analytics" ||
+    (!hasContactInfo && Boolean(eventName || path || payload.ts)) ||
+    rawMessage.startsWith("analytics") ||
+    rawMessage.includes("event: page_view") ||
+    rawMessage.includes("path: /admin") ||
+    rawMessage.includes("page_view") ||
+    rawMessage.includes("payload: [object object]")
+  );
+}
+
+function isAdminContentSubmission(lead) {
+  return String(lead?.kind || "").toLowerCase().startsWith("admin_");
+}
+
+function getAdminModuleKind(moduleId) {
+  return `admin_${moduleId}`;
+}
+
+function getModuleItems(leadsList, moduleId) {
+  return leadsList.filter(
+    (lead) => String(lead?.kind || "").toLowerCase() === getAdminModuleKind(moduleId)
+  );
+}
+
+function renderAdminModuleItem(module, lead) {
+  const payload = getLeadPayload(lead);
+  const title =
+    pickPayloadValue(payload, ["title", "titulo", "name", "nome"]) ||
+    `Novo ${module.singular}`;
+  const status = pickPayloadValue(payload, ["status", "situacao"]) || "Rascunho";
+  const notes = pickPayloadValue(payload, ["notes", "observacoes", "message", "mensagem"]);
+
+  return `
+    <article class="rg-admin-module-item">
+      <div>
+        <h3>${escapeHtml(title)}</h3>
+        ${notes ? `<p>${escapeHtml(notes)}</p>` : ""}
+        <span>${escapeHtml(status)} - ${escapeHtml(formatAdminDate(lead.created_at))}</span>
+      </div>
+      <button class="rg-admin-secondary-action" type="button" data-admin-module-delete="${escapeHtml(
+        lead.id
+      )}" data-admin-module-id="${escapeHtml(module.id)}">Remover</button>
+    </article>
+  `;
+}
+
+function renderAdminModulePanel(module) {
+  return `
+    <section class="rg-admin-panel rg-admin-card" data-admin-panel="${escapeHtml(module.id)}" hidden>
+      <div class="rg-admin-module-layout">
+        <div class="rg-admin-module-copy">
+          <span class="rg-admin-kicker">${escapeHtml(module.title)}</span>
+          <h2>Administrar ${escapeHtml(module.title)}</h2>
+          <p>${escapeHtml(module.description)}</p>
+        </div>
+        <form class="rg-admin-module-form" data-admin-module-form>
+          <input type="hidden" name="module" value="${escapeHtml(module.id)}" />
+          <label>
+            Titulo
+            <input name="title" type="text" placeholder="Nome do ${escapeHtml(module.singular)}" required />
+          </label>
+          <label>
+            Status
+            <input name="status" type="text" placeholder="Ex.: destaque, publicado, rascunho" />
+          </label>
+          <label>
+            Observacoes
+            <textarea name="notes" placeholder="Anote ajustes, chamadas ou proximas acoes"></textarea>
+          </label>
+          <button type="submit">Salvar no painel</button>
+          <span class="rg-admin-module-state" data-admin-module-state></span>
+        </form>
+      </div>
+      <div class="rg-admin-module-list" data-admin-module-list="${escapeHtml(module.id)}"></div>
+    </section>
+  `;
+}
 
   async function fetchAdminLeads() {
     const config = getBrowserSupabaseConfig();
@@ -514,18 +626,18 @@ const CONTACT_MAP_LINK = `https://www.google.com/maps/dir/?api=1&destination=${e
         <section class="rg-admin-shell" aria-labelledby="admin-title">
           <div class="rg-admin-hero">
             <p>Painel administrativo</p>
-            <h1 id="admin-title">Leads do site</h1>
-            <span>Consulte, filtre e organize os contatos recebidos pela Tempero Regina.</span>
+            <h1 id="admin-title">Painel Regina</h1>
+            <span>Acompanhe contatos comerciais e organize produtos, receitas e eventos em um so lugar.</span>
           </div>
 
           <div class="rg-admin-login rg-admin-card" data-admin-login>
             <div class="rg-admin-login-copy">
               <span class="rg-admin-kicker">Acesso restrito</span>
               <h2>Entrar no painel</h2>
-              <p>Use a senha configurada em <strong>NEXT_PUBLIC_ADMIN_ACCESS_KEY</strong> para consultar os leads salvos no Supabase.</p>
+              <p>Entre com a senha administrativa para acessar os contatos e as areas de conteudo do site.</p>
               <div class="rg-admin-config-note">
-                <strong>Ambiente seguro</strong>
-                <span>Somente variaveis publicas sao carregadas no navegador.</span>
+                <strong>Protecao ativa</strong>
+                <span>Acesso protegido por senha e dados conectados ao Supabase.</span>
               </div>
             </div>
             <form data-admin-login-form>
@@ -551,6 +663,17 @@ const CONTACT_MAP_LINK = `https://www.google.com/maps/dir/?api=1&destination=${e
               </div>
             </div>
 
+            <nav class="rg-admin-tabs rg-admin-card" aria-label="Areas do painel">
+              <button class="rg-admin-tab is-active" type="button" data-admin-tab="leads" aria-selected="true">Leads</button>
+              ${ADMIN_MODULES.map(
+                (module) =>
+                  `<button class="rg-admin-tab" type="button" data-admin-tab="${escapeHtml(
+                    module.id
+                  )}" aria-selected="false">${escapeHtml(module.title)}</button>`
+              ).join("")}
+            </nav>
+
+            <section class="rg-admin-panel is-active" data-admin-panel="leads">
             <label class="rg-admin-search">
               <span>Buscar por nome, e-mail ou mensagem</span>
               <input type="search" data-admin-search placeholder="Buscar leads..." />
@@ -574,6 +697,9 @@ const CONTACT_MAP_LINK = `https://www.google.com/maps/dir/?api=1&destination=${e
               </table>
               <div class="rg-admin-empty" data-admin-empty hidden>Nenhum lead encontrado.</div>
             </div>
+            </section>
+
+            ${ADMIN_MODULES.map(renderAdminModulePanel).join("")}
           </div>
         </section>
       </main>
@@ -599,6 +725,9 @@ const CONTACT_MAP_LINK = `https://www.google.com/maps/dir/?api=1&destination=${e
     const statsNode = root.querySelector("[data-admin-stats]");
     const refreshButton = root.querySelector("[data-admin-refresh]");
     const logoutButton = root.querySelector("[data-admin-logout]");
+    const tabButtons = root.querySelectorAll("[data-admin-tab]");
+    const panels = root.querySelectorAll("[data-admin-panel]");
+    const moduleForms = root.querySelectorAll("[data-admin-module-form]");
     let leads = [];
     let search = "";
 
@@ -619,8 +748,44 @@ const CONTACT_MAP_LINK = `https://www.google.com/maps/dir/?api=1&destination=${e
       loadLeads();
     }
 
+    function getVisibleLeadRows() {
+      return leads.filter((lead) => !isAnalyticsSubmission(lead) && !isAdminContentSubmission(lead));
+    }
+
+    function renderModuleList(moduleId) {
+      const module = ADMIN_MODULES.find((item) => item.id === moduleId);
+      const list = root.querySelector(`[data-admin-module-list="${moduleId}"]`);
+      if (!module || !list) return;
+
+      const items = getModuleItems(leads, moduleId);
+      list.innerHTML = items.length
+        ? items.map((lead) => renderAdminModuleItem(module, lead)).join("")
+        : `<div class="rg-admin-module-empty">Nenhum ${escapeHtml(
+            module.singular
+          )} salvo ainda.</div>`;
+    }
+
+    function renderAllModules() {
+      ADMIN_MODULES.forEach((module) => renderModuleList(module.id));
+    }
+
+    function setActivePanel(panelId) {
+      tabButtons.forEach((button) => {
+        const isActive = button.getAttribute("data-admin-tab") === panelId;
+        button.classList.toggle("is-active", isActive);
+        button.setAttribute("aria-selected", isActive ? "true" : "false");
+      });
+
+      panels.forEach((panel) => {
+        const isActive = panel.getAttribute("data-admin-panel") === panelId;
+        panel.hidden = !isActive;
+        panel.classList.toggle("is-active", isActive);
+      });
+    }
+
     function renderRows() {
-      const filtered = leads.filter((lead) => getLeadSearchText(lead).includes(search));
+      const visibleLeads = getVisibleLeadRows();
+      const filtered = visibleLeads.filter((lead) => getLeadSearchText(lead).includes(search));
       table.innerHTML = filtered
         .map((lead) => {
           const email = getLeadEmail(lead);
@@ -644,14 +809,15 @@ const CONTACT_MAP_LINK = `https://www.google.com/maps/dir/?api=1&destination=${e
       empty.hidden = filtered.length > 0;
       countNode.textContent = `${filtered.length} lead${filtered.length === 1 ? "" : "s"}`;
 
-      const byKind = leads.reduce((acc, lead) => {
-        const key = lead.kind || "lead";
-        acc[key] = (acc[key] || 0) + 1;
-        return acc;
-      }, {});
-      statsNode.innerHTML = Object.entries(byKind)
-        .map(([kind, total]) => `<span><strong>${total}</strong>${escapeHtml(kind)}</span>`)
-        .join("");
+      const hiddenInternal = Math.max(0, leads.length - visibleLeads.length);
+      const withEmail = visibleLeads.filter((lead) => getLeadEmail(lead)).length;
+      const withPhone = visibleLeads.filter((lead) => getLeadPhone(lead)).length;
+      statsNode.innerHTML = `
+        <span><strong>${visibleLeads.length}</strong>Leads exibidos</span>
+        <span><strong>${withEmail}</strong>Com e-mail</span>
+        <span><strong>${withPhone}</strong>Com telefone</span>
+        <span><strong>${hiddenInternal}</strong>Registros tecnicos ocultos</span>
+      `;
     }
 
     async function loadLeads() {
@@ -660,6 +826,7 @@ const CONTACT_MAP_LINK = `https://www.google.com/maps/dir/?api=1&destination=${e
       try {
         leads = await fetchAdminLeads();
         renderRows();
+        renderAllModules();
       } catch (error) {
         table.innerHTML = `<tr><td colspan="6">${escapeHtml(error.message || "Erro ao carregar leads.")}</td></tr>`;
       }
@@ -675,12 +842,12 @@ const CONTACT_MAP_LINK = `https://www.google.com/maps/dir/?api=1&destination=${e
     });
 
     if (!config) {
-      setLoginMessage("Configure NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY para usar o painel.");
+      setLoginMessage("Painel ainda nao conectado ao Supabase. Confira as variaveis publicas no ambiente de deploy.");
       return;
     }
 
     if (!config.adminAccessKey) {
-      setLoginMessage("Configure NEXT_PUBLIC_ADMIN_ACCESS_KEY para liberar o acesso ao painel.");
+      setLoginMessage("Senha administrativa ainda nao configurada no ambiente de deploy.");
       return;
     }
 
@@ -713,6 +880,81 @@ const CONTACT_MAP_LINK = `https://www.google.com/maps/dir/?api=1&destination=${e
       showLogin();
     });
 
+    tabButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        setActivePanel(button.getAttribute("data-admin-tab") || "leads");
+      });
+    });
+
+    moduleForms.forEach((moduleForm) => {
+      moduleForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const formData = new FormData(moduleForm);
+        const moduleId = String(formData.get("module") || "");
+        const module = ADMIN_MODULES.find((item) => item.id === moduleId);
+        const state = moduleForm.querySelector("[data-admin-module-state]");
+        const submitButton = moduleForm.querySelector('button[type="submit"]');
+        if (!module) return;
+
+        const title = String(formData.get("title") || "").trim();
+        const status = String(formData.get("status") || "").trim();
+        const notes = String(formData.get("notes") || "").trim();
+        if (!title) return;
+
+        if (state) {
+          state.textContent = "Salvando...";
+          state.classList.remove("is-error");
+        }
+        if (submitButton) submitButton.disabled = true;
+
+        try {
+          const result = await submitToSupabase(getAdminModuleKind(module.id), {
+            title,
+            status: status || "Rascunho",
+            notes,
+            name: title,
+            message: notes || status || title,
+            updated_at: new Date().toISOString(),
+          });
+          if (result && result.ok === false) {
+            throw new Error("Nao foi possivel salvar no Supabase.");
+          }
+          moduleForm.reset();
+          if (state) state.textContent = `${module.singular} salvo com sucesso.`;
+          await loadLeads();
+          setActivePanel(module.id);
+        } catch (error) {
+          if (state) {
+            state.textContent = error.message || "Erro ao salvar.";
+            state.classList.add("is-error");
+          }
+        } finally {
+          if (submitButton) submitButton.disabled = false;
+        }
+      });
+    });
+
+    dashboard?.addEventListener("click", async (event) => {
+      const button = event.target.closest("[data-admin-module-delete]");
+      if (!button) return;
+      const id = button.getAttribute("data-admin-module-delete");
+      const moduleId = button.getAttribute("data-admin-module-id") || "leads";
+      if (!id || !confirm("Remover este item do painel?")) return;
+      button.disabled = true;
+      button.textContent = "Removendo...";
+      try {
+        await deleteAdminLead(id);
+        leads = leads.filter((lead) => lead.id !== id);
+        renderAllModules();
+        renderRows();
+        setActivePanel(moduleId);
+      } catch (error) {
+        alert(error.message || "Nao foi possivel remover o item.");
+        button.disabled = false;
+        button.textContent = "Remover";
+      }
+    });
+
     table?.addEventListener("click", async (event) => {
       const button = event.target.closest("[data-admin-delete]");
       if (!button) return;
@@ -742,6 +984,8 @@ const CONTACT_MAP_LINK = `https://www.google.com/maps/dir/?api=1&destination=${e
   }
 
   function postAnalytics(event, payload) {
+    if (location.pathname === "/admin") return;
+
     const analyticsPayload = {
       event,
       payload: payload || {},

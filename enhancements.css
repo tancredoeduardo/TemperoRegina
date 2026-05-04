@@ -2233,6 +2233,193 @@ body.rg-back-to-top-ready button[data-rg-back-to-top-duplicate="true"] {
   color: #be123c;
 }
 
+.rg-admin-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid rgba(214, 224, 236, 0.9);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.rg-admin-tab {
+  border: 1px solid rgba(214, 224, 236, 0.95);
+  border-radius: 999px;
+  background: #ffffff;
+  color: #243149;
+  padding: 10px 16px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.rg-admin-tab:hover,
+.rg-admin-tab:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(227, 6, 19, 0.3);
+  box-shadow: 0 12px 26px rgba(35, 49, 73, 0.08);
+  outline: none;
+}
+
+.rg-admin-tab.is-active {
+  color: #ffffff;
+  background: #e30613;
+  border-color: transparent;
+  box-shadow: 0 16px 32px rgba(227, 6, 19, 0.2);
+}
+
+.rg-admin-panel[hidden] {
+  display: none !important;
+}
+
+.rg-admin-panel.is-active {
+  display: grid;
+  gap: 18px;
+}
+
+.rg-admin-module-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
+  gap: 22px;
+  align-items: start;
+}
+
+.rg-admin-module-copy h2 {
+  margin: 8px 0 10px;
+  color: #101827;
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.05;
+}
+
+.rg-admin-module-copy p {
+  margin: 0;
+  color: #53637a;
+  line-height: 1.65;
+}
+
+.rg-admin-module-form {
+  display: grid;
+  gap: 14px;
+}
+
+.rg-admin-module-form label {
+  display: grid;
+  gap: 8px;
+  color: #53637a;
+  font-weight: 900;
+}
+
+.rg-admin-module-form input,
+.rg-admin-module-form textarea {
+  width: 100%;
+  border: 1px solid #d6e0ec;
+  border-radius: 18px;
+  padding: 13px 14px;
+  background: #ffffff;
+  color: #16233a;
+  font: inherit;
+  outline: none;
+}
+
+.rg-admin-module-form textarea {
+  min-height: 116px;
+  resize: vertical;
+}
+
+.rg-admin-module-form input:focus,
+.rg-admin-module-form textarea:focus {
+  border-color: #e30613;
+  box-shadow: 0 0 0 4px rgba(227, 6, 19, 0.12);
+}
+
+.rg-admin-module-form button {
+  justify-self: start;
+  min-height: 46px;
+  border: 0;
+  border-radius: 999px;
+  background: #e30613;
+  color: #ffffff;
+  padding: 0 18px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.rg-admin-module-form button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.rg-admin-module-state {
+  min-height: 20px;
+  color: #166534;
+  font-weight: 900;
+}
+
+.rg-admin-module-state.is-error {
+  color: #be123c;
+}
+
+.rg-admin-module-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.rg-admin-module-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid #d6e0ec;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.86);
+}
+
+.rg-admin-module-item h3 {
+  margin: 0 0 6px;
+  color: #101827;
+  font-size: 18px;
+}
+
+.rg-admin-module-item p {
+  margin: 0 0 8px;
+  color: #53637a;
+  line-height: 1.5;
+}
+
+.rg-admin-module-item span {
+  color: #6c7888;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.rg-admin-secondary-action {
+  border: 1px solid #fecdd3;
+  border-radius: 999px;
+  background: #fff1f2;
+  color: #be123c;
+  padding: 10px 14px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.rg-admin-secondary-action:hover,
+.rg-admin-secondary-action:focus-visible {
+  background: #be123c;
+  color: #ffffff;
+  outline: none;
+}
+
+.rg-admin-module-empty {
+  padding: 16px;
+  border: 1px dashed #cfd9e8;
+  border-radius: 18px;
+  background: #ffffff;
+  color: #53637a;
+}
+
 @media (max-width: 700px) {
   .rg-admin-header {
     height: 78px;
@@ -2269,5 +2456,29 @@ body.rg-back-to-top-ready button[data-rg-back-to-top-duplicate="true"] {
   .rg-admin-login .rg-admin-password-toggle {
     right: 7px;
     padding: 0 10px;
+  }
+
+  .rg-admin-tabs {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .rg-admin-tab {
+    flex: 1 1 calc(50% - 8px);
+    padding: 10px 12px;
+  }
+
+  .rg-admin-module-layout {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .rg-admin-module-item {
+    grid-template-columns: 1fr;
+  }
+
+  .rg-admin-module-form button,
+  .rg-admin-secondary-action {
+    width: 100%;
   }
 }
