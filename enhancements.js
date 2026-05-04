@@ -530,7 +530,10 @@ const CONTACT_MAP_LINK = `https://www.google.com/maps/dir/?api=1&destination=${e
             </div>
             <form data-admin-login-form>
               <label for="admin-password">Senha admin</label>
-              <input id="admin-password" type="password" name="password" autocomplete="current-password" placeholder="Digite sua senha" required />
+              <div class="rg-admin-password-field">
+                <input id="admin-password" type="password" name="password" autocomplete="current-password" placeholder="Digite sua senha" required />
+                <button class="rg-admin-password-toggle" type="button" data-admin-password-toggle aria-controls="admin-password" aria-pressed="false">Mostrar</button>
+              </div>
               <button type="submit">Entrar no painel</button>
             </form>
             <div class="rg-admin-state" data-admin-login-state></div>
@@ -587,6 +590,8 @@ const CONTACT_MAP_LINK = `https://www.google.com/maps/dir/?api=1&destination=${e
     const dashboard = root.querySelector("[data-admin-dashboard]");
     const loginForm = root.querySelector("[data-admin-login-form]");
     const loginState = root.querySelector("[data-admin-login-state]");
+    const passwordInput = root.querySelector("#admin-password");
+    const passwordToggle = root.querySelector("[data-admin-password-toggle]");
     const table = root.querySelector("[data-admin-table]");
     const empty = root.querySelector("[data-admin-empty]");
     const searchInput = root.querySelector("[data-admin-search]");
@@ -659,6 +664,15 @@ const CONTACT_MAP_LINK = `https://www.google.com/maps/dir/?api=1&destination=${e
         table.innerHTML = `<tr><td colspan="6">${escapeHtml(error.message || "Erro ao carregar leads.")}</td></tr>`;
       }
     }
+
+    passwordToggle?.addEventListener("click", () => {
+      if (!passwordInput) return;
+      const shouldShow = passwordInput.type === "password";
+      passwordInput.type = shouldShow ? "text" : "password";
+      passwordToggle.textContent = shouldShow ? "Ocultar" : "Mostrar";
+      passwordToggle.setAttribute("aria-pressed", shouldShow ? "true" : "false");
+      passwordInput.focus();
+    });
 
     if (!config) {
       setLoginMessage("Configure NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY para usar o painel.");

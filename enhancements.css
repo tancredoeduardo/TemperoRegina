@@ -2049,6 +2049,16 @@ body.rg-back-to-top-ready button[data-rg-back-to-top-duplicate="true"] {
   background: #ffffff;
 }
 
+.rg-admin-password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.rg-admin-password-field input {
+  padding-right: 108px;
+}
+
 .rg-admin-login input:focus,
 .rg-admin-search input:focus {
   border-color: #e30613;
@@ -2065,6 +2075,23 @@ body.rg-back-to-top-ready button[data-rg-back-to-top-duplicate="true"] {
   color: #ffffff;
   font-weight: 900;
   cursor: pointer;
+}
+
+.rg-admin-login .rg-admin-password-toggle {
+  position: absolute;
+  right: 8px;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid rgba(227, 6, 19, 0.18);
+  background: rgba(227, 6, 19, 0.08);
+  color: #b70913;
+  font-size: 13px;
+  box-shadow: none;
+}
+
+.rg-admin-login .rg-admin-password-toggle:hover,
+.rg-admin-login .rg-admin-password-toggle:focus-visible {
+  background: rgba(227, 6, 19, 0.14);
 }
 
 .rg-admin-state {
@@ -2233,5 +2260,14 @@ body.rg-back-to-top-ready button[data-rg-back-to-top-duplicate="true"] {
 
   .rg-admin-config-note {
     width: 100%;
+  }
+
+  .rg-admin-password-field input {
+    padding-right: 96px;
+  }
+
+  .rg-admin-login .rg-admin-password-toggle {
+    right: 7px;
+    padding: 0 10px;
   }
 }
