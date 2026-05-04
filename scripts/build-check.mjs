@@ -3,7 +3,7 @@ import path from "node:path";
 import { spawnSync } from "node:child_process";
 
 const root = process.cwd();
-const publicDir = path.join(root, "public");
+const outputDir = path.join(root, "dist");
 const rootStaticExtensions = new Set([".html", ".css", ".png", ".jpg", ".jpeg", ".webp", ".svg", ".ico"]);
 const rootStaticJsPatterns = [/^index-[\w-]+\.js$/, /^config-[\w-]+\.js$/, /^enhancements\.js$/];
 const staticDirectories = ["assets", "download"];
@@ -22,7 +22,7 @@ function assertFile(file) {
 
 function copyFileToPublic(file) {
   const source = path.join(root, file);
-  const target = path.join(publicDir, file);
+  const target = path.join(outputDir, file);
   fs.mkdirSync(path.dirname(target), { recursive: true });
   fs.copyFileSync(source, target);
 }
@@ -34,7 +34,7 @@ function copyDirectoryToPublic(directory) {
   for (const entry of fs.readdirSync(sourceDir, { withFileTypes: true })) {
     const relativePath = path.join(directory, entry.name);
     const sourcePath = path.join(root, relativePath);
-    const targetPath = path.join(publicDir, relativePath);
+    const targetPath = path.join(outputDir, relativePath);
     const stats = fs.statSync(sourcePath);
 
     if (stats.isDirectory()) {
@@ -57,8 +57,8 @@ function shouldCopyRootStaticFile(file) {
 }
 
 function buildStaticOutput() {
-  fs.rmSync(publicDir, { recursive: true, force: true });
-  fs.mkdirSync(publicDir, { recursive: true });
+  fs.rmSync(outputDir, { recursive: true, force: true });
+  fs.mkdirSync(outputDir, { recursive: true });
 
   for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
     if (!entry.isFile()) continue;
@@ -112,7 +112,7 @@ function checkHtmlAssets() {
 
 function checkVercelConfig() {
   const vercel = readJson("vercel.json");
-  assert(vercel.outputDirectory === "public", "vercel.json precisa publicar a pasta public");
+  assert(vercel.outputDirectory === "dist", "vercel.json precisa publicar a pasta dist");
   assert(vercel.buildCommand === "npm run build", "vercel.json precisa usar npm run build");
   assert(!vercel.functions, "vercel.json nao deve declarar functions para deploy estatico");
   assert(Array.isArray(vercel.rewrites), "vercel.json precisa de rewrites");
@@ -155,7 +155,7 @@ checkPackage();
 checkVercelConfig();
 checkHtmlAssets();
 buildStaticOutput();
-assertFile("public/index.html");
-assertFile("public/download/catalogo-regina.pdf");
+assertFile("dist/index.html");
+assertFile("dist/download/catalogo-regina.pdf");
 
 console.log("Build check concluido: deploy estatico, assets, Vercel e Supabase OK.");
