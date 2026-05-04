@@ -46,7 +46,8 @@ As capturas desktop/mobile sao salvas em `visual-report/summary.json` e `visual-
 Use `.env.example` como base para configurar:
 
 - `NEXT_PUBLIC_SUPABASE_URL`: URL publica do projeto Supabase
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: chave anon/public do projeto Supabase
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`: chave publica recomendada do projeto Supabase
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: fallback legado, caso ainda esteja usando anon key
 - `SUPABASE_SUBMISSIONS_TABLE`: tabela usada para contatos, newsletter, revendedores e analytics
 - `CRM_WEBHOOK_URL`: recebe `contact`, `newsletter` e `revendedores`
 - `ANALYTICS_WEBHOOK_URL`: recebe eventos de analytics

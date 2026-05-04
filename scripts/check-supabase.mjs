@@ -36,7 +36,9 @@ loadEnvFile(".env.local");
 const config = getSupabaseConfig();
 
 if (!hasSupabaseConfig(config)) {
-  console.log("Supabase: variaveis ausentes. Configure NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY na Vercel.");
+  console.log(
+    "Supabase: variaveis ausentes. Configure NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY na Vercel."
+  );
   process.exit(0);
 }
 
