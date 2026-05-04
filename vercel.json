@@ -7,7 +7,7 @@
   "buildCommand": "npm run build",
   "functions": {
     "api/**/*.js": {
-      "excludeFiles": "{assets/**,download/**,chrome-profile*/**,visual-report/**,node_modules/**,*.html,*.css,*.map,*.log,*.png,*.jpg,*.jpeg,*.webp,*.pdf,index-*.js,config-*.js,enhancements.js,server.js}"
+      "excludeFiles": "{.git/**,.vercel/**,assets/**,public/**,download/**,data/**,scripts/**,server/**,chrome-profile/**,chrome-profile-mobile/**,visual-report/**,node_modules/**,*.html,*.css,*.map,*.log,*.png,*.jpg,*.jpeg,*.webp,*.pdf,*.txt,*.ps1,index-*.js,config-*.js,enhancements.js,server.js,server.*.log,bg.*.log}"
     }
   },
   "rewrites": [

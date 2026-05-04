@@ -150,7 +150,6 @@ function checkPackage() {
   "enhancements.js",
   "api/contact.js",
   "api/newsletter.js",
-  "api/index.js",
   "api/revendedores.js",
   "api/analytics.js",
   "api/products.js",
