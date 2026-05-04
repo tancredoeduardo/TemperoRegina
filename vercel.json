@@ -1,15 +1,5 @@
 {
   "framework": "vite",
   "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "rewrites": [
-    { "source": "/admin", "destination": "/index.html" },
-    { "source": "/contato", "destination": "/index.html" },
-    { "source": "/eventos", "destination": "/index.html" },
-    { "source": "/faq", "destination": "/index.html" },
-    { "source": "/produto/:path*", "destination": "/index.html" },
-    { "source": "/quem-somos", "destination": "/index.html" },
-    { "source": "/receitas", "destination": "/index.html" },
-    { "source": "/trabalhe-conosco", "destination": "/index.html" }
-  ]
+  "outputDirectory": "dist"
 }
