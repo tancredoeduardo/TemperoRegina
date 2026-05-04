@@ -112,14 +112,12 @@ function checkHtmlAssets() {
 
 function checkVercelConfig() {
   const vercel = readJson("vercel.json");
+  assert(vercel.framework === "vite", "vercel.json precisa declarar framework vite");
   assert(vercel.outputDirectory === "dist", "vercel.json precisa publicar a pasta dist");
   assert(vercel.buildCommand === "npm run build", "vercel.json precisa usar npm run build");
+  assert(!vercel.installCommand, "vercel.json nao deve usar installCommand customizado");
   assert(!vercel.functions, "vercel.json nao deve declarar functions para deploy estatico");
-  assert(Array.isArray(vercel.rewrites), "vercel.json precisa de rewrites");
-  const catchAllIndex = vercel.rewrites.findIndex((rewrite) => rewrite.source === "/(.*)");
-  const apiIndex = vercel.rewrites.findIndex((rewrite) => rewrite.source === "/api/(.*)");
-  assert(catchAllIndex >= 0, "vercel.json precisa manter fallback para index.html");
-  assert(apiIndex === -1, "vercel.json nao deve rotear /api no deploy estatico");
+  assert(!vercel.rewrites, "vercel.json deve deixar o Vite/Vercel cuidar das rotas estaticas");
 }
 
 function checkNoServerlessEntrypoints() {
@@ -135,7 +133,8 @@ function checkNoServerlessEntrypoints() {
 
 function checkPackage() {
   const pkg = readJson("package.json");
-  assert(pkg.scripts?.build, "package.json precisa de script build");
+  assert(pkg.scripts?.build === "vite build", "package.json precisa usar vite build");
+  assert(pkg.devDependencies?.vite, "Dev dependency vite ausente");
   assert(pkg.dependencies?.["@supabase/supabase-js"], "Dependencia @supabase/supabase-js ausente");
 }
 
