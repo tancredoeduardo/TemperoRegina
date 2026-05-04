@@ -5,7 +5,6 @@ node_modules
 data
 chrome-profile*
 visual-report
-server.js
 mirror-assets.ps1
 *.log
 *.map

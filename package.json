@@ -3,6 +3,10 @@
   "private": true,
   "version": "1.0.0",
   "description": "Clone estatico do site Tempero Regina",
+  "main": "server.js",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "build": "node scripts/build-check.mjs",
     "check:supabase": "node scripts/check-supabase.mjs",
