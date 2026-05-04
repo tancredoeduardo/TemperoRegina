@@ -45,7 +45,36 @@ As capturas desktop/mobile sao salvas em `visual-report/summary.json` e `visual-
 
 Use `.env.example` como base para configurar:
 
+- `NEXT_PUBLIC_SUPABASE_URL`: URL publica do projeto Supabase
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: chave anon/public do projeto Supabase
+- `SUPABASE_SUBMISSIONS_TABLE`: tabela usada para contatos, newsletter, revendedores e analytics
 - `CRM_WEBHOOK_URL`: recebe `contact`, `newsletter` e `revendedores`
 - `ANALYTICS_WEBHOOK_URL`: recebe eventos de analytics
 
 Sem esses valores, o sistema continua funcionando com persistencia local em `data/*.jsonl`.
+
+## Supabase
+
+O projeto Supabase configurado e `Tempero Regina` (`rwsxwcljnximafgajxvj`), com URL publica:
+
+```text
+https://rwsxwcljnximafgajxvj.supabase.co
+```
+
+A tabela `public.site_submissions` foi criada com RLS ativo. O acesso publico permite apenas `insert`, sem politica de leitura publica. O SQL reproduzivel fica em:
+
+```text
+scripts/setup-supabase.sql
+```
+
+Para validar localmente depois de preencher `.env.local`:
+
+```bash
+npm run check:supabase
+```
+
+Para testar tambem um insert real de healthcheck:
+
+```bash
+SUPABASE_HEALTHCHECK_INSERT=1 npm run check:supabase
+```
