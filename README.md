@@ -2,6 +2,7 @@
 
 Clone local completo do preview Readdy:
 
+https:www.temperoregina.com.br
 https://readdy.cc/preview/19bab42f-a1e6-4ada-9847-319a0f0abd49/9115452
 
 ## Rotas
