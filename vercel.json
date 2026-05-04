@@ -2,7 +2,7 @@
   "version": 2,
   "cleanUrls": true,
   "trailingSlash": false,
-  "installCommand": "npm install",
+  "installCommand": "npm ci --omit=dev",
   "buildCommand": "npm run build",
   "functions": {
     "api/**/*.js": {
