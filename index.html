@@ -56,6 +56,10 @@
       };
     </script>
     <script defer src="/enhancements.js"></script>
+    <script type="module">
+      import { injectSpeedInsights } from '@vercel/speed-insights';
+      injectSpeedInsights();
+    </script>
   </head>
   <body>
     <div id="root"></div>
